@@ -1,6 +1,6 @@
 import bisect
 
-f = open("../input.txt", "r")
+f = open("../input", "r")
 fl = f.readlines()
 numbers = []
 for l in fl:
