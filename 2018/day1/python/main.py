@@ -15,7 +15,7 @@ sum = 0
 i = 0
 knownsums = [0]
 while True:
-    sum += numbers[i % len(fl)]
+    sum += numbers[i % len(numbers)]
     pos = bisect.bisect_left(knownsums, sum)
     if pos != len(knownsums) and knownsums[pos] == sum:
         break
