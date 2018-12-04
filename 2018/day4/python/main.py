@@ -38,5 +38,5 @@ for line in lines:
 scenarioOneGuard = max(guards.items(), key=lambda g: sum(g[1]))
 print(scenarioOneGuard[0] * scenarioOneGuard[1].index(max(scenarioOneGuard[1])))
 
-scenarioTwoGuard = max(guards.items(), key=lambda g:max(g[1]))
+scenarioTwoGuard = max(guards.items(), key=lambda g: max(g[1]))
 print(scenarioTwoGuard[0] * scenarioTwoGuard[1].index(max(scenarioTwoGuard[1])))
