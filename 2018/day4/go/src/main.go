@@ -70,7 +70,6 @@ func main() {
 		}
 	}
 
-	// Scenario ONE
 	var scenarioOneGuard = 0
 	var scenarioOneMinute = 0
 	var scenarioTwoGuard = 0
@@ -101,6 +100,4 @@ func main() {
 	}
 	fmt.Println(scenarioOneGuard * scenarioOneMinute)
 	fmt.Println(scenarioTwoGuard * scenarioTwoMinute)
-
-	// Scenario TWO
 }
