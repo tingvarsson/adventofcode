@@ -41,7 +41,5 @@ for x in range(maxX):
         else:
             coords[closestCoord][2] += 1
 
-largestAreaCoord = max(coords, key=lambda c: c[2])
-print(largestAreaCoord)
-
+print(max(coords, key=lambda c: c[2]))
 print(scenarioTwoArea)
