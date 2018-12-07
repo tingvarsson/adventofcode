@@ -8,6 +8,20 @@ import (
 	"strconv"
 )
 
+func sum(s []int) int {
+	sum := 0
+	for _, v := range s {
+		sum += v
+	}
+	return sum
+}
+
+func insert(s *[]int, i int, v int) {
+	*s = append(*s, 0)
+	copy((*s)[i+1:], (*s)[i:])
+	(*s)[i] = v
+}
+
 func main() {
 	file, err := os.Open("../input")
 	defer file.Close()
@@ -16,36 +30,29 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var numbers []int
+	var freqChanges []int
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		i, err := strconv.Atoi(scanner.Text())
 		if err != nil {
 			log.Fatal(err)
 		}
-		numbers = append(numbers, i)
+		freqChanges = append(freqChanges, i)
 	}
+	println(sum(freqChanges))
 
-	sum := 0
-	for _, n := range numbers {
-		sum += n
-	}
-	println(sum)
+	var seenFreqs []int
+	freq := 0
+	for i := 0; ; i++ {
+		freq += freqChanges[i%len(freqChanges)]
+		pos := sort.Search(len(seenFreqs),
+			func(i int) bool { return seenFreqs[i] >= freq })
 
-	var knownsums []int
-	sum = 0
-	idx := 0
-	for {
-		sum += numbers[idx%len(numbers)]
-		pos := sort.Search(len(knownsums), func(i int) bool { return knownsums[i] >= sum })
-		if pos < len(knownsums) && knownsums[pos] == sum {
-			break
+		if pos < len(seenFreqs) && seenFreqs[pos] == freq {
+			break // done, found an already seen frequency
 		} else {
-			knownsums = append(knownsums, 0)
-			copy(knownsums[pos+1:], knownsums[pos:])
-			knownsums[pos] = sum
-			idx++
+			insert(&seenFreqs, pos, freq)
 		}
 	}
-	println(sum)
+	println(freq)
 }
