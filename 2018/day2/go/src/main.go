@@ -2,14 +2,23 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 )
 
+func hasValue(s map[rune]int, v int) bool {
+	for k := range s {
+		if s[k] == v {
+			return true
+		}
+	}
+	return false
+}
+
 func main() {
 	file, err := os.Open("../input")
 	defer file.Close()
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,28 +29,23 @@ func main() {
 		lines = append(lines, scanner.Text())
 	}
 
-	sum2 := 0
-	sum3 := 0
+	sumOfHasDoublet := 0
+	sumOfHasTriplet := 0
 	for _, line := range lines {
-		m := make(map[rune]int)
+		runeMap := make(map[rune]int)
 		for _, c := range line {
-			m[c]++
+			runeMap[c]++
 		}
 
-		found2 := false
-		found3 := false
-		for _, count := range m {
-			if !found2 && count == 2 {
-				found2 = true
-				sum2++
-			} else if !found3 && count == 3 {
-				found3 = true
-				sum3++
-			}
+		if hasValue(runeMap, 2) {
+			sumOfHasDoublet++
+		}
+		if hasValue(runeMap, 3) {
+			sumOfHasTriplet++
 		}
 	}
-	println("checksum:")
-	println(sum2 * sum3)
+	fmt.Printf("checksum: %d\n", sumOfHasDoublet*sumOfHasTriplet)
+
 	for i, line := range lines {
 		for _, secondline := range lines[i:] {
 			out := ""
@@ -51,8 +55,7 @@ func main() {
 				}
 			}
 			if len(line)-1 == len(out) {
-				println("same line:")
-				println(out)
+				fmt.Printf("same line except one char: %s", out)
 			}
 		}
 	}
