@@ -9,6 +9,14 @@ import (
 	"strconv"
 )
 
+func atoi(s string) int {
+	n, err := strconv.Atoi(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return n
+}
+
 func main() {
 	file, err := os.Open("../input")
 	defer file.Close()
@@ -22,30 +30,23 @@ func main() {
 		lines = append(lines, scanner.Text())
 	}
 
-	// Parse claims from input to array of maps
 	var claims []map[string]int
+	pattern := "#(?P<id>\\d+) @ (?P<x>\\d+),(?P<y>\\d+): (?P<xsize>\\d+)x(?P<ysize>\\d+)"
+	re := regexp.MustCompile(pattern)
 	for _, line := range lines {
-		var pattern = "#(?P<id>\\d+) @ (?P<x>\\d+),(?P<y>\\d+): (?P<xsize>\\d+)x(?P<ysize>\\d+)"
-		var re = regexp.MustCompile(pattern)
 		match := re.FindStringSubmatch(line)
 		var claim = make(map[string]int)
 		for i, name := range re.SubexpNames() {
 			if i > 0 && i <= len(match) {
-				n, err := strconv.Atoi(match[i])
-				if err != nil {
-					log.Fatal(err)
-				}
-				claim[name] = n
+				claim[name] = atoi(match[i])
 			}
 		}
 		claims = append(claims, claim)
 	}
 
-	// Create fabric
 	const inches = 1000
 	fabric := [inches][inches]uint{}
 
-	// Add claims
 	for _, claim := range claims {
 		for x := claim["x"]; x < claim["x"]+claim["xsize"]; x++ {
 			for y := claim["y"]; y < claim["y"]+claim["ysize"]; y++ {
@@ -54,18 +55,16 @@ func main() {
 		}
 	}
 
-	// Sum of multiple claims
-	var sumofmultiple int = 0
+	var sumOfMultiple int
 	for _, x := range fabric {
 		for _, y := range x {
 			if y >= 2 {
-				sumofmultiple++
+				sumOfMultiple++
 			}
 		}
 	}
-	fmt.Println(sumofmultiple)
+	fmt.Printf("Number of square inches within multiple claims: %d\n", sumOfMultiple)
 
-	// test for lonely claims
 	for _, claim := range claims {
 		var found = true
 		for x := claim["x"]; x < claim["x"]+claim["xsize"]; x++ {
@@ -76,7 +75,7 @@ func main() {
 			}
 		}
 		if found {
-			fmt.Println(claim)
+			fmt.Printf("Claim that doesn't overlap: %v\n", claim)
 		}
 	}
 }
