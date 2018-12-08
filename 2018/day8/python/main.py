@@ -14,20 +14,15 @@ class Node(object):
 
 def parseInput():
     f = open("../input", "r")
-    rawInput = f.read().split(' ')
-    input = []
-    for i in rawInput:
-        input.append(int(i))
-    return input
+    input = f.read().split(' ')
+    return [int(i) for i in input]
 
 def parseNode(data):
-    numChildren = data[0]
-    numMetadata = data[1]
     node = Node()
-    for _ in range(numChildren):
+    for _ in range(data[0]):
         node.addChild(parseNode(data[node.length:]))
-    for i in range(node.length, node.length+numMetadata):
-        node.addMetadata(data[i])
+    for _ in range(data[1]):
+        node.addMetadata(data[node.length])
     return node
 
 def sumMetadata(node):
@@ -45,7 +40,7 @@ def sumMetadata2(node):
             sum += m
     else:
         for m in node.metadata:
-            if m-1 < len(node.children):
+            if m <= len(node.children):
                 sum += sumMetadata2(node.children[m-1])
     return sum
 
