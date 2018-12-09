@@ -49,6 +49,7 @@ func main() {
 			rootParents = append(rootParents, parent)
 		}
 	}
+	sort.Strings(rootParents)
 
 	available := rootParents
 	order := ""

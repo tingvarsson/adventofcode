@@ -44,6 +44,7 @@ rootParents = []
 for parent in parentChildrenGraph:
     if parent not in childrenParentGraph:
         rootParents.append(parent)
+rootParents = sorted(rootParents)
 
 order = ""
 available = rootParents
