@@ -19,8 +19,8 @@ func max(array []int) (value int) {
 	return
 }
 
-func play(players int, lastMarble int) int {
-	score := make([]int, players)
+func play(numPlayers int, lastMarble int) int {
+	score := make([]int, numPlayers)
 	currentPlayer := 0
 	currentMarble := &node{Value: 0}
 	currentMarble.Next = currentMarble
@@ -42,16 +42,16 @@ func play(players int, lastMarble int) int {
 			currentMarble.Prev.Prev.Next = currentMarble
 			currentMarble.Prev = currentMarble.Prev.Prev
 		}
-		currentPlayer = (currentPlayer + 1) % totalPlayers
+		currentPlayer = (currentPlayer + 1) % numPlayers
 	}
 	return max(score)
 }
 
-const totalPlayers = 418
-const lastMarble = 70769
-const lastMarble2 = lastMarble * 100
-
 func main() {
-	fmt.Printf("High score #1: %d\n", play(totalPlayers, lastMarble))
-	fmt.Printf("High score #2: %d\n", play(totalPlayers, lastMarble2))
+	const numPlayers = 418
+	const lastMarble = 70769
+	const lastMarble2 = lastMarble * 100
+
+	fmt.Printf("High score #1: %d\n", play(numPlayers, lastMarble))
+	fmt.Printf("High score #2: %d\n", play(numPlayers, lastMarble2))
 }
