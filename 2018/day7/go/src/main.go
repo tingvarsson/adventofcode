@@ -39,20 +39,20 @@ func parseInstructions(instrList []string) (children map[string][]string, parent
 	return
 }
 
-func main() {
-	lines := readFileToLines("../input")
-	children, parents := parseInstructions(lines)
-
-	var rootParents []string
+func determineRootParents(children map[string][]string, parents map[string][]string) (rootParents []string) {
 	for parent := range children {
 		if _, ok := parents[parent]; !ok {
 			rootParents = append(rootParents, parent)
 		}
 	}
 	sort.Strings(rootParents)
+	return
+}
 
-	available := rootParents
-	order := ""
+func determineWorkOrder(inputFilepath string) (order string) {
+	lines := readFileToLines(inputFilepath)
+	children, parents := parseInstructions(lines)
+	available := determineRootParents(children, parents)
 	for len(available) != 0 {
 		order += available[0]
 		available = available[1:]
@@ -70,17 +70,34 @@ func main() {
 		sort.Strings(available)
 	}
 	fmt.Printf("Theoretical order: %s\n", order)
+	return
+}
 
-	available = rootParents
-	order = ""
-	var workers [5][2]int
-	workOngoing := true
-	time := 0
-	for time = 0; workOngoing; time++ {
+func all(vs []worker, f func(worker) bool) bool {
+	for _, v := range vs {
+		if !f(v) {
+			return false
+		}
+	}
+	return true
+}
+
+type worker struct {
+	currInstr int
+	doneTime  int
+}
+
+func workOrder(inputFilepath string, numWorkers int, workTime int) (time int) {
+	lines := readFileToLines(inputFilepath)
+	children, parents := parseInstructions(lines)
+	available := determineRootParents(children, parents)
+	order := ""
+	workers := make([]worker, numWorkers)
+	for time = 0; ; time++ {
 		for i, w := range workers {
-			if w[0] != 0 && w[1] < time {
-				order += string(w[0])
-				for _, new := range children[string(w[0])] {
+			if w.currInstr != 0 && w.doneTime < time {
+				order += string(w.currInstr)
+				for _, new := range children[string(w.currInstr)] {
 					allParentsInOrder := true
 					for _, parent := range parents[new] {
 						if !strings.Contains(order, parent) {
@@ -92,16 +109,16 @@ func main() {
 					}
 				}
 				sort.Strings(available)
-				workers[i] = [2]int{0, 0}
+				workers[i] = worker{0, 0}
 			}
 		}
 
 		removeBeforeIndex := -1
 		for i, a := range available {
 			for j, w := range workers {
-				if w[0] == 0 {
+				if w.currInstr == 0 {
 					job := a[0]
-					workers[j] = [2]int{int(job), time + 60 + int(job) - int('A')}
+					workers[j] = worker{int(job), time + workTime + int(job) - int('A')}
 					removeBeforeIndex = i
 					break
 				}
@@ -109,13 +126,16 @@ func main() {
 		}
 		available = available[removeBeforeIndex+1:]
 
-		workOngoing = false
-		for _, w := range workers {
-			if w[0] != 0 {
-				workOngoing = true
-				break
-			}
+		if all(workers, func(w worker) bool {
+			return w.currInstr == 0
+		}) {
+			fmt.Printf("Time: %d\n", time)
+			return
 		}
 	}
-	fmt.Printf("Time: %d\n", time-1)
+}
+
+func main() {
+	determineWorkOrder("../input")
+	workOrder("../input", 5, 60)
 }
