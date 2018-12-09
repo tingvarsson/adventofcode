@@ -47,47 +47,38 @@ for parent in parentChildrenGraph:
 
 order = ""
 available = rootParents
-while True:
+while len(available) != 0:
     order += available[0]
     available = available[1:]
     addAvailable(order[-1], order, available)
-    if len(available) == 0:
-        break
 
 print(order)
 
-workers = [("", 0)] * 5 # 5 workers á (currentTask, whenAvailableAgain)
-available = rootParents
-time = 0
-order = "" # keep track of processed instructions
-while True:
-    for i, w in enumerate(workers): # Free workers and add new availables
-        if w[0] != "" and w[1] < time:
-            order += w[0]
-            addAvailable(w[0], order, available)
-            workers[i] = ("", 0) # Worker freed up
+def work(numWorkers, available):
+    workers = [("", 0)] * numWorkers # (currentTask, whenAvailableAgain)
+    time = 0
+    order = "" # keep track of processed instructions
+    while True:
+        for i, w in enumerate(workers): # Free workers and add new availables
+            if w[0] != "" and w[1] < time:
+                order += w[0]
+                addAvailable(w[0], order, available)
+                workers[i] = ("", 0) # Worker freed up
 
-    removeAvailable = []
-    for a in available: # Assign new work if available
-        for j, w in enumerate(workers):
-            if w[0] == "":
-                workers[j] = (a, time+ord(a)-ord("A")+60)
-                removeAvailable.append(a)
-                break # Work assigned, continue with next available
-    
-    for remove in removeAvailable:
-        i = available.index(remove)
-        available = available[:i]+available[i+1:]
+        removeAvailable = []
+        for a in available: # Assign new work if available
+            for j, w in enumerate(workers):
+                if w[0] == "":
+                    workers[j] = (a, time+ord(a)-ord("A")+60)
+                    removeAvailable.append(a)
+                    break # Work assigned, continue with next available
+        
+        for remove in removeAvailable:
+            i = available.index(remove)
+            available = available[:i]+available[i+1:]
 
-    workOngoing = False
-    for w in workers: # Determine if we are finished yet or not
-        if w[0] != "":
-            workOngoing = True
-            break
-    
-    if workOngoing:
+        if all(w[0] == "" for w in workers):
+            return time
         time += 1
-    else:
-        break
 
-print(time)
+print(work(5, rootParents))
