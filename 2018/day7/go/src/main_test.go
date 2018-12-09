@@ -15,7 +15,7 @@ func TestDetermineOrder(t *testing.T) {
 	}
 	for _, test := range tests {
 		if output := determineWorkOrder(test.input); output != test.expected {
-			t.Error("Test Failed: {} inputted, {} expected, recieved: {}", test.input, test.expected, output)
+			t.Error("Test Failed: {} input, {} expected, recieved: {}", test.input, test.expected, output)
 		}
 	}
 }
@@ -33,7 +33,7 @@ func TestWorkOrder(t *testing.T) {
 	}
 	for _, test := range tests {
 		if output := workOrder(test.input, test.workers, test.workTime); output != test.expected {
-			t.Error("Test Failed: {} inputted, {} expected, recieved: {}", test.input, test.expected, output)
+			t.Error("Test Failed: {} input, {} workers, {} workTime, {} expected, recieved: {}", test.input, test.workers, test.workTime, test.expected, output)
 		}
 	}
 }
