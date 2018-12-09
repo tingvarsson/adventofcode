@@ -40,24 +40,24 @@ parentChildrenGraph = {} # [parent, [children]]
 childrenParentGraph = {} # [child, [parents]]
 parseInput()
 
-rootParent = None
+rootParents = []
 for parent in parentChildrenGraph:
     if parent not in childrenParentGraph:
-        rootParent = parent
+        rootParents.append(parent)
 
-order = rootParent
-available = []
+order = ""
+available = rootParents
 while True:
+    order += available[0]
+    available = available[1:]
     addAvailable(order[-1], order, available)
     if len(available) == 0:
         break
-    order += available[0]
-    available = available[1:]
 
 print(order)
 
 workers = [("", 0)] * 5 # 5 workers á (currentTask, whenAvailableAgain)
-available = [rootParent]
+available = rootParents
 time = 0
 order = "" # keep track of processed instructions
 while True:

@@ -43,14 +43,14 @@ func main() {
 	lines := readFileToLines("../input")
 	children, parents := parseInstructions(lines)
 
-	var rootParent string
+	var rootParents []string
 	for parent := range children {
 		if _, ok := parents[parent]; !ok {
-			rootParent = parent
+			rootParents = append(rootParents, parent)
 		}
 	}
 
-	available := []string{rootParent}
+	available := rootParents
 	order := ""
 	for len(available) != 0 {
 		order += available[0]
@@ -70,7 +70,7 @@ func main() {
 	}
 	fmt.Printf("Theoretical order: %s\n", order)
 
-	available = []string{rootParent}
+	available = rootParents
 	order = ""
 	var workers [5][2]int
 	workOngoing := true
