@@ -6,13 +6,13 @@ import (
 )
 
 func sumFrequencies(filepath string) int {
-	lines := utils.ReadFileToLines("day1/input")
+	lines := utils.ReadFileToLines(filepath)
 	freqChanges := utils.StringsToInts(lines)
 	return utils.Sum(freqChanges)
 }
 
 func sameFrequency(filepath string) (freq int) {
-	lines := utils.ReadFileToLines("day1/input")
+	lines := utils.ReadFileToLines(filepath)
 	freqChanges := utils.StringsToInts(lines)
 	var seenFreqs []int
 	for i := 0; ; i++ {
