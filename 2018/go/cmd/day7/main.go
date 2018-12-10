@@ -1,28 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"regexp"
 	"sort"
 	"strings"
+	"utils"
 )
-
-func readFileToLines(filepath string) (lines []string) {
-	file, err := os.Open(filepath)
-	defer file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return
-}
 
 func parseInstructions(instrList []string) (children map[string][]string, parents map[string][]string) {
 	children = make(map[string][]string)
@@ -50,7 +34,7 @@ func determineRootParents(children map[string][]string, parents map[string][]str
 }
 
 func determineWorkOrder(inputFilepath string) (order string) {
-	lines := readFileToLines(inputFilepath)
+	lines := utils.ReadFileToLines(inputFilepath)
 	children, parents := parseInstructions(lines)
 	available := determineRootParents(children, parents)
 	for len(available) != 0 {
@@ -73,8 +57,13 @@ func determineWorkOrder(inputFilepath string) (order string) {
 	return
 }
 
-func all(vs []worker, f func(worker) bool) bool {
-	for _, v := range vs {
+type worker struct {
+	currInstr int
+	doneTime  int
+}
+
+func all(workers []worker, f func(worker) bool) bool {
+	for _, v := range workers {
 		if !f(v) {
 			return false
 		}
@@ -82,13 +71,8 @@ func all(vs []worker, f func(worker) bool) bool {
 	return true
 }
 
-type worker struct {
-	currInstr int
-	doneTime  int
-}
-
 func workOrder(inputFilepath string, numWorkers int, workTime int) (time int) {
-	lines := readFileToLines(inputFilepath)
+	lines := utils.ReadFileToLines(inputFilepath)
 	children, parents := parseInstructions(lines)
 	available := determineRootParents(children, parents)
 	order := ""

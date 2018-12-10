@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
+	"utils"
 )
 
 type node struct {
@@ -24,21 +24,6 @@ func (n *node) addMetadata(m int) {
 	n.Length++
 }
 
-func atoi(s string) int {
-	n, err := strconv.Atoi(s)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return n
-}
-
-func sumSlice(s []int) (sum int) {
-	for _, v := range s {
-		sum += v
-	}
-	return sum
-}
-
 func readFileToIntSlice(filepath string) (data []int) {
 	file, err := os.Open(filepath)
 	defer file.Close()
@@ -49,7 +34,7 @@ func readFileToIntSlice(filepath string) (data []int) {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanWords)
 	for scanner.Scan() {
-		data = append(data, atoi(scanner.Text()))
+		data = append(data, utils.Atoi(scanner.Text()))
 	}
 	return
 }
@@ -69,13 +54,13 @@ func sumMetadata(n node) (sum int) {
 	for _, c := range n.Children {
 		sum += sumMetadata(c)
 	}
-	sum += sumSlice(n.MetaData)
+	sum += utils.Sum(n.MetaData)
 	return
 }
 
 func sumMetadata2(n node) (sum int) {
 	if len(n.Children) == 0 {
-		sum += sumSlice(n.MetaData)
+		sum += utils.Sum(n.MetaData)
 	} else {
 		for _, m := range n.MetaData {
 			if m <= len(n.Children) {

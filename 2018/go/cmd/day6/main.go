@@ -1,51 +1,16 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"math"
-	"os"
 	"regexp"
 	"strconv"
+	"utils"
 )
 
-func readFileToLines(filepath string) []string {
-	file, err := os.Open(filepath)
-	defer file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
-}
-
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-func max(array []int) (index int, value int) {
-	index = 0
-	value = 0
-	for i, v := range array {
-		if v > value {
-			index = i
-			value = v
-		}
-	}
-	return
-}
-
 func main() {
-	lines := readFileToLines("../input")
+	lines := utils.ReadFileToLines("../input")
 
 	var xCoords []int
 	var yCoords []int
@@ -80,7 +45,7 @@ func main() {
 			closestCoordDistance := math.MaxInt64
 			coordDistanceSum := 0
 			for i := 0; i < len(coordArea); i++ {
-				distance := abs(x-xCoords[i]) + abs(y-yCoords[i])
+				distance := utils.Abs(x-xCoords[i]) + utils.Abs(y-yCoords[i])
 				if distance < closestCoordDistance {
 					closestCoord = i
 					closestCoordDistance = distance
@@ -105,7 +70,7 @@ func main() {
 			}
 		}
 	}
-	maxIndex, maxArea := max(coordArea)
+	maxIndex, maxArea := utils.Max(coordArea)
 	fmt.Printf("%d %d %d %d\n", maxIndex, xCoords[maxIndex], yCoords[maxIndex], maxArea)
 	fmt.Printf("%d\n", closeToAllArea)
 }

@@ -6,16 +6,8 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"strconv"
+	"utils"
 )
-
-func atoi(s string) int {
-	n, err := strconv.Atoi(s)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return n
-}
 
 func main() {
 	file, err := os.Open("../input")
@@ -38,7 +30,7 @@ func main() {
 		var claim = make(map[string]int)
 		for i, name := range re.SubexpNames() {
 			if i > 0 && i <= len(match) {
-				claim[name] = atoi(match[i])
+				claim[name] = utils.Atoi(match[i])
 			}
 		}
 		claims = append(claims, claim)

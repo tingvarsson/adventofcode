@@ -6,21 +6,8 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"utils"
 )
-
-func sum(s []int) int {
-	sum := 0
-	for _, v := range s {
-		sum += v
-	}
-	return sum
-}
-
-func insert(s *[]int, i int, v int) {
-	*s = append(*s, 0)
-	copy((*s)[i+1:], (*s)[i:])
-	(*s)[i] = v
-}
 
 func main() {
 	file, err := os.Open("../input")
@@ -39,7 +26,7 @@ func main() {
 		}
 		freqChanges = append(freqChanges, i)
 	}
-	println(sum(freqChanges))
+	println(utils.Sum(freqChanges))
 
 	var seenFreqs []int
 	freq := 0
@@ -51,7 +38,7 @@ func main() {
 		if pos < len(seenFreqs) && seenFreqs[pos] == freq {
 			break // done, found an already seen frequency
 		} else {
-			insert(&seenFreqs, pos, freq)
+			utils.Insert(&seenFreqs, pos, freq)
 		}
 	}
 	println(freq)

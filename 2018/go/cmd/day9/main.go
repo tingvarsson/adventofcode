@@ -2,21 +2,13 @@ package main
 
 import (
 	"fmt"
+	"utils"
 )
 
 type node struct {
 	Value int
 	Next  *node
 	Prev  *node
-}
-
-func max(array []int) (value int) {
-	for _, v := range array {
-		if v > value {
-			value = v
-		}
-	}
-	return
 }
 
 func play(numPlayers int, lastMarble int) int {
@@ -44,7 +36,7 @@ func play(numPlayers int, lastMarble int) int {
 		}
 		currentPlayer = (currentPlayer + 1) % numPlayers
 	}
-	return max(score)
+	return utils.MaxValue(score)
 }
 
 func main() {
