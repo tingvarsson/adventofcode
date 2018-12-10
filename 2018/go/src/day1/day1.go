@@ -1,45 +1,34 @@
 package main
 
 import (
-	"bufio"
-	"log"
-	"os"
 	"sort"
-	"strconv"
 	"utils"
 )
 
-func main() {
-	file, err := os.Open("../input")
-	defer file.Close()
+func sumFrequencies(filepath string) int {
+	lines := utils.ReadFileToLines("day1/input")
+	freqChanges := utils.StringsToInts(lines)
+	return utils.Sum(freqChanges)
+}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var freqChanges []int
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		i, err := strconv.Atoi(scanner.Text())
-		if err != nil {
-			log.Fatal(err)
-		}
-		freqChanges = append(freqChanges, i)
-	}
-	println(utils.Sum(freqChanges))
-
+func sameFrequency(filepath string) (freq int) {
+	lines := utils.ReadFileToLines("day1/input")
+	freqChanges := utils.StringsToInts(lines)
 	var seenFreqs []int
-	freq := 0
 	for i := 0; ; i++ {
 		freq += freqChanges[i%len(freqChanges)]
 		pos := sort.Search(len(seenFreqs),
 			func(i int) bool { return seenFreqs[i] >= freq })
 
 		if pos < len(seenFreqs) && seenFreqs[pos] == freq {
-			break // done, found an already seen frequency
+			return // done, found an already seen frequency
 		} else {
 			utils.Insert(&seenFreqs, pos, freq)
 		}
 	}
-	println(freq)
+}
+
+func main() {
+	println(sumFrequencies("day1/input"))
+	println(sameFrequency("day1/input"))
 }

@@ -88,6 +88,14 @@ func ReadFileToString(filepath string) string {
 	return string(b)
 }
 
+// StringsToInts takes a []string s and converts it to a []int i with Atoi()
+func StringsToInts(s []string) (i []int) {
+	for _, s := range s {
+		i = append(i, Atoi(s))
+	}
+	return
+}
+
 // Sum returns the sum of all values in []int s
 func Sum(s []int) (sum int) {
 	for _, v := range s {
