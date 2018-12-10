@@ -22,9 +22,9 @@ func sameFrequency(filepath string) (freq int) {
 
 		if pos < len(seenFreqs) && seenFreqs[pos] == freq {
 			return // done, found an already seen frequency
-		} else {
-			utils.Insert(&seenFreqs, pos, freq)
 		}
+
+		utils.Insert(&seenFreqs, pos, freq)
 	}
 }
 
