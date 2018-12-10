@@ -35,8 +35,8 @@ func main() {
 		}
 	}
 
-	_, xMax := max(xCoords)
-	_, yMax := max(yCoords)
+	xMax := utils.MaxValue(xCoords)
+	yMax := utils.MaxValue(yCoords)
 
 	closeToAllArea := 0
 	for x := 0; x < xMax+1; x++ {
