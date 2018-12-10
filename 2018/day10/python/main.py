@@ -46,7 +46,7 @@ while True:
     maxY = max(points, key=lambda p: p.posY).posY
     if minHeight == None or maxY < minHeight:
         minHeight = maxY
-    elif maxY >= minHeight:
+    elif maxY >= minHeight: # past the lowest point, go back one
         for p in points:
             p.posX -= p.velocityX
             p.posY -= p.velocityY
