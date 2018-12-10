@@ -1,26 +1,15 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strconv"
+	"utils"
 )
 
 func main() {
-	file, err := os.Open("../sortedinput")
-	defer file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
+	lines := utils.ReadFileToLines("../sortedinput")
 
 	const guardPattern = "#(\\d+)"
 	var guardReg = regexp.MustCompile(guardPattern)

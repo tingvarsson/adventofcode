@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
-	"log"
-	"os"
 	"strings"
+	"utils"
 )
 
 func reactPoly(input string) string {
@@ -23,17 +21,7 @@ func reactPoly(input string) string {
 }
 
 func main() {
-	file, err := os.Open("../input")
-	defer file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
+	lines := utils.ReadFileToLines("../input")
 
 	scenarioOnePoly := reactPoly(lines[0])
 	println(len(scenarioOnePoly))

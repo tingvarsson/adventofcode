@@ -1,26 +1,13 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"regexp"
 	"utils"
 )
 
 func main() {
-	file, err := os.Open("../input")
-	defer file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
+	lines := utils.ReadFileToLines("../input")
 
 	var claims []map[string]int
 	pattern := "#(?P<id>\\d+) @ (?P<x>\\d+),(?P<y>\\d+): (?P<xsize>\\d+)x(?P<ysize>\\d+)"
