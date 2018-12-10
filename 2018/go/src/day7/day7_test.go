@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"utils"
 )
 
 func TestDetermineOrder(t *testing.T) {
@@ -9,9 +10,9 @@ func TestDetermineOrder(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"day7/example", "CABDFE"},
-		{"day7/input", "BGJCNLQUYIFMOEZTADKSPVXRHW"},
-		{"day7/input2", "CQSWKZFJONPBEUMXADLYIGVRHT"},
+		{"../../../day7/example", utils.ReadFileToString("../../../day7/example_answer1")},
+		{"../../../day7/input", utils.ReadFileToString("../../../day7/input_answer1")},
+		{"../../../day7/input2", utils.ReadFileToString("../../../day7/input2_answer1")},
 	}
 	for _, test := range tests {
 		if output := determineWorkOrder(test.input); output != test.expected {
@@ -27,9 +28,9 @@ func TestWorkOrder(t *testing.T) {
 		workTime int
 		expected int
 	}{
-		{"day7/example", 2, 0, 15},
-		{"day7/input", 5, 60, 1017},
-		{"day7/input2", 5, 60, 914},
+		{"../../../day7/example", 2, 0, 15},
+		{"../../../day7/input", 5, 60, 1017},
+		{"../../../day7/input2", 5, 60, 914},
 	}
 	for _, test := range tests {
 		if output := workOrder(test.input, test.workers, test.workTime); output != test.expected {
