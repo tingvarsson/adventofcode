@@ -3,7 +3,7 @@ import re
 inches = 1000
 fabric = [[0 for i in range(inches)] for j in range(inches)]
 
-f = open("../input", "r")
+f = open("day3/input", "r")
 fl = f.read().splitlines()
 
 def createClaim(line):

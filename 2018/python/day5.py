@@ -10,7 +10,7 @@ def reactPolymer(input):
             output += c
     return output
 
-f = open("../input", "r")
+f = open("day5/input", "r")
 lines = f.read().splitlines()
 input = lines[0]
 

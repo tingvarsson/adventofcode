@@ -21,7 +21,7 @@ func reactPoly(input string) string {
 }
 
 func main() {
-	lines := utils.ReadFileToLines("../input")
+	lines := utils.ReadFileToLines("day5/input")
 
 	scenarioOnePoly := reactPoly(lines[0])
 	println(len(scenarioOnePoly))

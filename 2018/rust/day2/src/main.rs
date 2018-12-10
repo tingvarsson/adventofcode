@@ -4,7 +4,7 @@ use std::io::{BufRead, BufReader, Result};
 use std::path::Path;
 
 fn main() -> Result<()> {
-    let path = Path::new("../input");
+    let path = Path::new("day2/input");
     let file = File::open(&path)?;
     let mut lines: Vec<String> = vec![];
     for line in BufReader::new(file).lines() {

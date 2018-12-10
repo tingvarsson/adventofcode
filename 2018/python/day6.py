@@ -1,7 +1,7 @@
 import math
 import re
 
-f = open("../input", "r")
+f = open("day6/input", "r")
 lines = f.read().splitlines()
 
 coordRegex = r'(\d+), (\d+)'

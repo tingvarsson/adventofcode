@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	lines := utils.ReadFileToLines("../input")
+	lines := utils.ReadFileToLines("day3/input")
 
 	var claims []map[string]int
 	pattern := "#(?P<id>\\d+) @ (?P<x>\\d+),(?P<y>\\d+): (?P<xsize>\\d+)x(?P<ysize>\\d+)"

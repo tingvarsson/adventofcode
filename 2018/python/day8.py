@@ -13,7 +13,7 @@ class Node(object):
         self.length += 1
 
 def parseInput():
-    f = open("../input", "r")
+    f = open("day8/input", "r")
     input = f.read().split(' ')
     return [int(i) for i in input]
 

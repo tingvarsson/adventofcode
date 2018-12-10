@@ -1,6 +1,6 @@
 import bisect
 
-f = open("../input", "r")
+f = open("day1/input", "r")
 fl = f.readlines()
 numbers = []
 for l in fl:

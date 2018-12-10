@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	lines := utils.ReadFileToLines("../input")
+	lines := utils.ReadFileToLines("day6/input")
 
 	var xCoords []int
 	var yCoords []int

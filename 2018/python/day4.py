@@ -2,7 +2,7 @@ import bisect
 import re
 
 # We preprocess the list with a simple cli call to sort
-f = open("../sortedinput", "r")
+f = open("day4/sortedinput", "r")
 lines = f.read().splitlines()
 
 guardIdRegex = r'#(\d+)'

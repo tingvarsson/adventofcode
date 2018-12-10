@@ -8,7 +8,7 @@ class Point(object):
         self.velocityY = vy
 
 def parseInput():
-    f = open("../input", "r")
+    f = open("day10/input", "r")
     lines = f.read().splitlines()
     # "position=< 9,  1> velocity=< 0,  2>""
     regex = r'position=<(.*), (.*)> velocity=<(.*), (.*)>'

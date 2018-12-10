@@ -72,7 +72,7 @@ func sumMetadata2(n node) (sum int) {
 }
 
 func main() {
-	data := readFileToIntSlice("../input")
+	data := readFileToIntSlice("day8/input")
 	rootNode := parseNode(data)
 	fmt.Printf("%d\n", sumMetadata(rootNode))
 	fmt.Printf("%d\n", sumMetadata2(rootNode))

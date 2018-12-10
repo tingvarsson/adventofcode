@@ -15,7 +15,7 @@ func hasValue(s map[rune]int, v int) bool {
 }
 
 func main() {
-	lines := utils.ReadFileToLines("../input")
+	lines := utils.ReadFileToLines("day2/input")
 
 	sumOfHasDoublet := 0
 	sumOfHasTriplet := 0

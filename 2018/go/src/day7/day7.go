@@ -120,6 +120,6 @@ func workOrder(inputFilepath string, numWorkers int, workTime int) (time int) {
 }
 
 func main() {
-	determineWorkOrder("../input")
-	workOrder("../input", 5, 60)
+	determineWorkOrder("day7/input")
+	workOrder("day7/input", 5, 60)
 }

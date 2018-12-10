@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	lines := utils.ReadFileToLines("../sortedinput")
+	lines := utils.ReadFileToLines("day4/sortedinput")
 
 	const guardPattern = "#(\\d+)"
 	var guardReg = regexp.MustCompile(guardPattern)

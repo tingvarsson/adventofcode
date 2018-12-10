@@ -2,7 +2,7 @@ import math
 import re
 
 def parseInput():
-    f = open("../input", "r")
+    f = open("day7/input", "r")
     lines = f.read().splitlines()
     regex = r'Step (.) .* step (.)'
     pattern = re.compile(regex)

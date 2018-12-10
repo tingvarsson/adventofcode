@@ -3,7 +3,7 @@ use std::io::{BufRead, BufReader, Result};
 use std::path::Path;
 
 fn main() -> Result<()> {
-    let path = Path::new("../input");
+    let path = Path::new("day1/input");
     let file = File::open(&path)?;
     let mut numbers: Vec<i32> = vec![];
     for line in BufReader::new(file).lines() {

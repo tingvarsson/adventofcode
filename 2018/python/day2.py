@@ -1,4 +1,4 @@
-f = open("../input", "r")
+f = open("day2/input", "r")
 fl = f.read().splitlines()
 
 sum2 = 0
