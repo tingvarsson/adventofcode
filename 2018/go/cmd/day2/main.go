@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
+	"utils"
 )
 
 func hasValue(s map[rune]int, v int) bool {
@@ -17,17 +15,7 @@ func hasValue(s map[rune]int, v int) bool {
 }
 
 func main() {
-	file, err := os.Open("../input")
-	defer file.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
+	lines := utils.ReadFileToLines("../input")
 
 	sumOfHasDoublet := 0
 	sumOfHasTriplet := 0
