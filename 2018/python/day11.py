@@ -7,8 +7,8 @@ def calcFuelCell(x, y, gridSerialNumber):
     return reduced - 5
 
 def populateGrid(gridSerialNumber):
-    for y in range(1, gridSize-1):
-        for x in range(1, gridSize-1):
+    for y in range(1, gridSize):
+        for x in range(1, gridSize):
             grid[y][x] = calcFuelCell(x, y, gridSerialNumber)
 
 def sumMinorSquareAddition(xStart, yStart, size):
@@ -23,16 +23,17 @@ def sumMinorSquareAddition(xStart, yStart, size):
 def findLargest(minSize, maxSize):
     largest = (0, 0, 0 ,0) # sum, x, y, size
     for size in range(1, maxSize+1):
-        for y in range(1, gridSize-(size-2)):
-            for x in range(1, gridSize-(size-2)):
+        for y in range(1, gridSize-(size-1)):
+            for x in range(1, gridSize-(size-1)):
                 newSum = sumMinorSquareAddition(x, y, size)
                 if size >= minSize and newSum > largest[0]:
                     largest = (newSum, x, y, size)
     return largest
 
-gridSize = 300
-grid = [[0 for x in range(gridSize+1)] for y in range(gridSize+1)]
-sumGrid = [[0 for x in range(gridSize+1)] for y in range(gridSize+1)]
+gridSize = 301 # Adjusted for indexing 1..300
+grid = [[0 for x in range(gridSize)] for y in range(gridSize)]
+sumGrid = [[0 for x in range(gridSize)] for y in range(gridSize)]
 populateGrid(6548)
 print(findLargest(3, 3))
-print(findLargest(3, 300))
+sumGrid = [[0 for x in range(gridSize)] for y in range(gridSize)]
+#print(findLargest(1, 300))
