@@ -1,20 +1,18 @@
 class cart(object):
-  def __init__(self, id, dir, x, y, currTrack):
-    self.id = id
-    self.dir = dir
-    self.nextTurn = "left"
-    self.currTrack = currTrack
+  def __init__(self, dir, x, y):
     self.x = x
     self.y = y
+    self.dir = dir
+    self.nextTurn = "l"
     self.crashed = False
 
-  def changeDir(self):
+  def changeDir(self, track):
     dr = dirRules[self.dir]
-    if self.currTrack == "+":
+    if track == "+":
       self.dir = dr.intersection[self.nextTurn]
       self.nextTurn = turningOrder[self.nextTurn]
     else:
-      self.dir = dr.dirChange[self.currTrack]
+      self.dir = dr.dirChange[track]
 
 class directionRule(object):
   def __init__(self, xOffset, yOffset, dirChange, intersection):
@@ -25,12 +23,12 @@ class directionRule(object):
 
 cartParseRules = {"^":"|", ">":"-", "v":"|", "<":"-"}
 
-dirRules = {"^":directionRule(0, -1, {"/":">", "|":"^", "\\":"<", "-":"X"}, {"left":"<","straight":"^","right":">"}),
-            "v":directionRule(0,  1, {"/":"<", "|":"v", "\\":">", "-":"X"}, {"left":">","straight":"v","right":"<"}),
-            "<":directionRule(-1, 0, {"/":"v", "|":"X", "\\":"^", "-":"<"}, {"left":"v","straight":"<","right":"^"}),
-            ">":directionRule( 1, 0, {"/":"^", "|":"X", "\\":"v", "-":">"}, {"left":"^","straight":">","right":"v"})}
+dirRules = {"^":directionRule(0, -1, {"/":">", "|":"^", "\\":"<", "-":"X"}, {"l":"<","s":"^","r":">"}),
+            "v":directionRule(0,  1, {"/":"<", "|":"v", "\\":">", "-":"X"}, {"l":">","s":"v","r":"<"}),
+            "<":directionRule(-1, 0, {"/":"v", "|":"X", "\\":"^", "-":"<"}, {"l":"v","s":"<","r":"^"}),
+            ">":directionRule( 1, 0, {"/":"^", "|":"X", "\\":"v", "-":">"}, {"l":"^","s":">","r":"v"})}
 
-turningOrder = {"left":"straight", "straight":"right", "right":"left"}
+turningOrder = {"l":"s", "s":"r", "r":"l"}
 
 def parseInput(tracks, carts):
   f = open("day13/input", "r")
@@ -39,13 +37,12 @@ def parseInput(tracks, carts):
     row = []
     for x, char in enumerate(line):
       if char in cartParseRules:
-        c = cart(len(carts), char, x, y, cartParseRules[char])
+        c = cart(char, x, y)
         carts.append(c)
-        row.append(str(c.id))
+        row.append(cartParseRules[char])
       else:
         row.append(char)
     tracks.append(row)
-  return tracks
 
 def run(tracks, carts):
   while len(carts) > 1:
@@ -56,19 +53,14 @@ def run(tracks, carts):
       newX = c.x+dirRules[c.dir].xOffset
       newY = c.y+dirRules[c.dir].yOffset
       if [newX, newY] in ([c.x, c.y] for c in carts if not c.crashed):
-        otherCart = [c for c in carts if not c.crashed and c.x == newX and c.y == newY][0]
         print("BOOM!! @ %d,%d" % (newX, newY))
-        tracks[otherCart.y][otherCart.x] = otherCart.currTrack
+        otherCart = [c for c in carts if not c.crashed and c.x == newX and c.y == newY][0]
         otherCart.crashed = True
-        tracks[c.y][c.x] = c.currTrack
         c.crashed = True
       else: 
-        tracks[c.y][c.x] = c.currTrack
-        c.currTrack = tracks[newY][newX]
-        tracks[newY][newX] = str(c.id)
         c.x = newX
         c.y = newY
-        c.changeDir()
+        c.changeDir(tracks[newY][newX])
 
     carts = [c for c in carts if not c.crashed]
 
