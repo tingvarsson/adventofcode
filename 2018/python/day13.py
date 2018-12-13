@@ -1,18 +1,20 @@
 class cart(object):
-  def __init__(self, dir, currTrack):
+  def __init__(self, id, dir, x, y, currTrack):
+    self.id = id
     self.dir = dir
     self.nextTurn = "left"
     self.currTrack = currTrack
-    self.time = 0
-    self.x = 0
-    self.y = 0
+    self.x = x
+    self.y = y
+    self.crashed = False
 
-  def changeDir(self, dirRule):
+  def changeDir(self):
+    dr = dirRules[self.dir]
     if self.currTrack == "+":
-      self.dir = dirRule.intersection[self.nextTurn]
+      self.dir = dr.intersection[self.nextTurn]
       self.nextTurn = turningOrder[self.nextTurn]
     else:
-      self.dir = dirRule.dirChange[self.currTrack]
+      self.dir = dr.dirChange[self.currTrack]
 
 class directionRule(object):
   def __init__(self, xOffset, yOffset, dirChange, intersection):
@@ -21,7 +23,7 @@ class directionRule(object):
     self.dirChange = dirChange
     self.intersection = intersection
 
-parseRules = {"^":"|", ">":"-", "v":"|", "<":"-"}
+cartParseRules = {"^":"|", ">":"-", "v":"|", "<":"-"}
 
 dirRules = {"^":directionRule(0, -1, {"/":">", "|":"^", "\\":"<", "-":"X"}, {"left":"<","straight":"^","right":">"}),
             "v":directionRule(0,  1, {"/":"<", "|":"v", "\\":">", "-":"X"}, {"left":">","straight":"v","right":"<"}),
@@ -30,64 +32,50 @@ dirRules = {"^":directionRule(0, -1, {"/":">", "|":"^", "\\":"<", "-":"X"}, {"le
 
 turningOrder = {"left":"straight", "straight":"right", "right":"left"}
 
-carts = {}
-tracks = []
-
-def parseInput():
+def parseInput(tracks, carts):
   f = open("day13/input", "r")
   lines = f.read().splitlines()
-  for line in lines:
+  for y, line in enumerate(lines):
     row = []
-    for char in line:
-      if char in parseRules:
-        c = cart(char, parseRules[char])
-        carts[str(len(carts))] = c
-        row.append(str(len(carts)-1))
+    for x, char in enumerate(line):
+      if char in cartParseRules:
+        c = cart(len(carts), char, x, y, cartParseRules[char])
+        carts.append(c)
+        row.append(str(c.id))
       else:
         row.append(char)
     tracks.append(row)
   return tracks
 
-def boomCheck(x, y):
-  if tracks[y][x].isdigit():
-    cKey = tracks[y][x]
-    tracks[y][x] = carts[cKey].currTrack
-    del(carts[cKey])
-    print("BOOM!! @ %d,%d" % (x, y))
-    return True
-  return False
+def run(tracks, carts):
+  while len(carts) > 1:
+    carts.sort(key=lambda c: (c.y, c.x))
+    for c in carts:
+      if c.crashed:
+        continue
+      newX = c.x+dirRules[c.dir].xOffset
+      newY = c.y+dirRules[c.dir].yOffset
+      if [newX, newY] in ([c.x, c.y] for c in carts if not c.crashed):
+        otherCart = [c for c in carts if not c.crashed and c.x == newX and c.y == newY][0]
+        print("BOOM!! @ %d,%d" % (newX, newY))
+        tracks[otherCart.y][otherCart.x] = otherCart.currTrack
+        otherCart.crashed = True
+        tracks[c.y][c.x] = c.currTrack
+        c.crashed = True
+      else: 
+        tracks[c.y][c.x] = c.currTrack
+        c.currTrack = tracks[newY][newX]
+        tracks[newY][newX] = str(c.id)
+        c.x = newX
+        c.y = newY
+        c.changeDir()
 
-def run():
-  time = 0
-  while True:
-    for y, row in enumerate(tracks):
-      for x, track in enumerate(row):
-        if track.isdigit():
-          c = carts[track]
-          if c.time >= time:
-            continue
-          c.time = time
-          
-          dr = dirRules[c.dir]
-          xNext = x+dr.xOffset
-          yNext = y+dr.yOffset
-          if boomCheck(xNext, yNext):
-              tracks[y][x] = carts[track].currTrack
-              del(carts[track])
-          else: # move to new track and update pos/direction
-            tracks[y][x] = c.currTrack
-            c.currTrack = tracks[yNext][xNext]
-            tracks[yNext][xNext] = track
-            c.x = xNext
-            c.y = yNext
-            c.changeDir(dr)
-    
-    if len(carts) == 0:
-      return
-    elif len(carts) == 1:
-      print("Last cart @ %d,%d" % (next(iter(carts.values())).x, next(iter(carts.values())).y))
-      return
-    time += 1
+    carts = [c for c in carts if not c.crashed]
 
-parseInput()
-run()
+  if len(carts) == 1:
+    print("Last cart @ %d,%d" % (carts[0].x, carts[0].y))
+
+carts = []
+tracks = []
+parseInput(tracks, carts)
+run(tracks, carts)
