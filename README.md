@@ -14,7 +14,7 @@
 | 10  | [data](2018/day10/) | [src](2018/python/day10.py) | [src](2018/go/src/day10/day10.go) |                                  |
 | 11  | [data](2018/day11/) | [src](2018/python/day11.py) | [src](2018/go/src/day11/day11.go) |                                  |
 | 12  | [data](2018/day12/) |                             | [src](2018/go/src/day12/day12.go) |                                  |
-| 13  | [data](2018/day13/) | [src](2018/python/day13.py) |                                   |                                  |
+| 13  | [data](2018/day13/) | [src](2018/python/day13.py) | [src](2018/go/src/day13/day13.go) |                                  |
 | 14  |                     |                             |                                   |                                  |
 | 15  |                     |                             |                                   |                                  |
 | 16  |                     |                             |                                   |                                  |
