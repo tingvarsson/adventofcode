@@ -1,7 +1,7 @@
 # Advent of Code
 ## 2018
 | Day | Input               | Python                      | Go                                | Rust(semi-future)                 | C(future) | C++(future) |
-| --- | ------------------  | --------------------------  | --------------------------------  | -------------------------------   | - | - |
+| -:- | -:-                 | -:-                         | -:-                               | -:-                               | -:-       | -:-         |
 | 1   | [data](2018/day1/)  | [src](2018/python/day1.py)  | [src](2018/go/src/day1/day1.go)   | [src](2018/rust/day1/src/main.rs) |   |   |
 | 2   | [data](2018/day2/)  | [src](2018/python/day2.py)  | [src](2018/go/src/day2/day2.go)   | [src](2018/rust/day2/src/main.rs) |   |   |
 | 3   | [data](2018/day3/)  | [src](2018/python/day3.py)  | [src](2018/go/src/day3/day3.go)   |                                   |   |   |
