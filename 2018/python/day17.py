@@ -51,15 +51,13 @@ def clayLeft(area, pos):
 def clayRight(area, pos):
   return area[pos[1]][pos[0]+1] == '#'
 
-
 def runWater(area):
-  currentPos = (500, 0)
+  startingPos = (500, 0)
+  currentPos = startingPos
+  currentRow = deque([currentPos])
   stack = deque()
-  currentRow = deque(currentPos)
   while True:
-    if currentPos == 500: # FIXME: ugly hack
-      break
-    elif endOfAreaBelow(area, currentPos):
+    if endOfAreaBelow(area, currentPos):
       currentRow = stack.pop()
       currentPos = currentRow[0]
     elif runningWaterBelow(area, currentPos):
@@ -97,6 +95,9 @@ def runWater(area):
       currentPos = currentRow[0]
     elif clayLeft(area, currentPos):
       currentPos = currentRow[-1]
+
+    if currentPos == startingPos:
+      return # back to start again
 
 clayCoords = []
 parseInput("day17/input", clayCoords)
