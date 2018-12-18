@@ -1,7 +1,3 @@
-import copy
-import hashlib
-
-
 def parseInput(filepath):
     f = open(filepath, "r")
     data = f.read().splitlines()
@@ -40,9 +36,10 @@ def checkAnyAdjacentTreesAndLumberyards(area, toCheck):
     trees = 0
     lumberyards = 0
     for x, y in toCheck:
-        if area[y][x] == "|":
+        pos = area[y][x]
+        if pos == "|":
             trees += 1
-        elif area[y][x] == "#":
+        elif pos == "#":
             lumberyards += 1
         if trees >= 1 and lumberyards >= 1:
             return True
@@ -50,33 +47,37 @@ def checkAnyAdjacentTreesAndLumberyards(area, toCheck):
 
 
 def newResource(area, x, y):
-    adjacent = (
-        (x - 1, y - 1),
-        (x - 1, y),
-        (x - 1, y + 1),
-        (x, y - 1),
-        (x, y + 1),
-        (x + 1, y - 1),
-        (x + 1, y),
-        (x + 1, y + 1),
-    )
-    if area[y][x] == ".":
-        return "|" if checkAdjacentTrees(area, adjacent) else area[y][x]
-    elif area[y][x] == "|":
-        return "#" if checkAdjacentLumberyards(area, adjacent) else area[y][x]
-    elif area[y][x] == "#":
-        return (
-            area[y][x] if checkAnyAdjacentTreesAndLumberyards(area, adjacent) else "."
+    adjacent = ()
+    if (x, y) in ADJACENT_CACHE:
+        adjacent = ADJACENT_CACHE[(x, y)]
+    else:
+        adjacent = (
+            (x - 1, y - 1),
+            (x - 1, y),
+            (x - 1, y + 1),
+            (x, y - 1),
+            (x, y + 1),
+            (x + 1, y - 1),
+            (x + 1, y),
+            (x + 1, y + 1),
         )
+        ADJACENT_CACHE[(x, y)] = adjacent
+    pos = area[y][x]
+    if pos == ".":
+        return "|" if checkAdjacentTrees(area, adjacent) else pos
+    elif pos == "|":
+        return "#" if checkAdjacentLumberyards(area, adjacent) else pos
+    elif pos == "#":
+        return pos if checkAnyAdjacentTreesAndLumberyards(area, adjacent) else "."
 
 
 def run(time, area):
     seenAreas = []
     t = 0
     while time is None or t < time:
-        newArea = [[" " for x in range(AREASIZE)] for y in range(AREASIZE)]
-        for y in range(1, AREASIZE - 1):
-            for x in range(1, AREASIZE - 1):
+        newArea = [[" " for x in range(AREA_SIZE)] for y in range(AREA_SIZE)]
+        for y in range(1, AREA_SIZE - 1):
+            for x in range(1, AREA_SIZE - 1):
                 newArea[y][x] = newResource(area, x, y)
 
         if newArea in seenAreas:
@@ -91,13 +92,14 @@ def run(time, area):
     return newArea
 
 
-AREASIZE = 0
+AREA_SIZE = 0
+ADJACENT_CACHE = {}
 
 
 def main():
     area = parseInput("day18/input")
-    global AREASIZE
-    AREASIZE = len(area) - 2
+    global AREA_SIZE
+    AREA_SIZE = len(area) - 2
 
     newArea = run(10, area)
     sumWood = sum(sum(1 for pos in row if pos == "|") for row in newArea)
