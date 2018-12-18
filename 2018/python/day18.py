@@ -5,19 +5,52 @@ import hashlib
 def parseInput(filepath):
     f = open(filepath, "r")
     data = f.read().splitlines()
-    output = []
+    output = [[" "] * len(data[0])]
     for line in data:
-        row = []
+        row = [" "]
         for pos in line:
             row.append(pos)
         output.append(row)
+        row.append(" ")
+    output.append([" "] * len(data[0]))
     return output
 
 
-def checkAdjacent(area, x, y):
+def checkAdjacentTrees(area, toCheck):
+    trees = 0
+    for x, y in toCheck:
+        if area[y][x] == "|":
+            trees += 1
+        if trees >= 3:
+            return True
+    return False
+
+
+def checkAdjacentLumberyards(area, toCheck):
+    lumberyards = 0
+    for x, y in toCheck:
+        if area[y][x] == "#":
+            lumberyards += 1
+        if lumberyards >= 3:
+            return True
+    return False
+
+
+def checkAnyAdjacentTreesAndLumberyards(area, toCheck):
     trees = 0
     lumberyards = 0
-    for x2, y2 in (
+    for x, y in toCheck:
+        if area[y][x] == "|":
+            trees += 1
+        elif area[y][x] == "#":
+            lumberyards += 1
+        if trees >= 1 and lumberyards >= 1:
+            return True
+    return False
+
+
+def newResource(area, x, y):
+    adjacent = (
         (x - 1, y - 1),
         (x - 1, y),
         (x - 1, y + 1),
@@ -26,32 +59,24 @@ def checkAdjacent(area, x, y):
         (x + 1, y - 1),
         (x + 1, y),
         (x + 1, y + 1),
-    ):
-        if 0 <= x2 < len(area) and 0 <= y2 < len(area):
-            if area[y2][x2] == "|":
-                trees += 1
-            elif area[y2][x2] == "#":
-                lumberyards += 1
-    return (trees, lumberyards)
-
-
-def newResource(area, x, y):
-    trees, lumberyards = checkAdjacent(area, x, y)
+    )
     if area[y][x] == ".":
-        return "|" if trees >= 3 else area[y][x]
+        return "|" if checkAdjacentTrees(area, adjacent) else area[y][x]
     elif area[y][x] == "|":
-        return "#" if lumberyards >= 3 else area[y][x]
+        return "#" if checkAdjacentLumberyards(area, adjacent) else area[y][x]
     elif area[y][x] == "#":
-        return "." if (lumberyards == 0 or trees == 0) else area[y][x]
+        return (
+            area[y][x] if checkAnyAdjacentTreesAndLumberyards(area, adjacent) else "."
+        )
 
 
 def run(time, area):
     seenAreas = []
     t = 0
     while time is None or t < time:
-        newArea = [["" for x in range(len(area[y]))] for y in range(len(area))]
-        for y in range(len(newArea)):
-            for x in range(len(newArea[y])):
+        newArea = [[" " for x in range(AREASIZE)] for y in range(AREASIZE)]
+        for y in range(1, AREASIZE - 1):
+            for x in range(1, AREASIZE - 1):
                 newArea[y][x] = newResource(area, x, y)
 
         if newArea in seenAreas:
@@ -66,8 +91,13 @@ def run(time, area):
     return newArea
 
 
+AREASIZE = 0
+
+
 def main():
     area = parseInput("day18/input")
+    global AREASIZE
+    AREASIZE = len(area) - 2
 
     newArea = run(10, area)
     sumWood = sum(sum(1 for pos in row if pos == "|") for row in newArea)
