@@ -8,11 +8,6 @@ def addr(reg, a, b, c):
     reg[c] = reg[a] + reg[b]
 
 
-def addrspec(reg, a, b, c):
-    reg[c] = reg[a] + reg[b]
-    reg[c] = reg[4] + reg[b]
-
-
 def addi(reg, a, b, c):
     reg[c] = reg[a] + b
 
@@ -61,13 +56,6 @@ def gtrr(reg, a, b, c):
     reg[c] = 1 if reg[a] > reg[b] else 0
 
 
-HOLYNUMBER = math.sqrt(10551343)
-
-
-def gtrrsqrt(reg, a, b, c):
-    reg[c] = 1 if reg[a] > HOLYNUMBER else 0
-
-
 def eqir(reg, a, b, c):
     reg[c] = 1 if a == reg[b] else 0
 
@@ -104,12 +92,6 @@ class executionData(object):
     def __init__(self, opcode, a, b, c):
         for op in availableOpcodes:
             if opcode == op.__name__:
-                if op == gtrr and a == 5:
-                    self.Op = gtrrsqrt
-                    break
-                elif op == addr and c == 0:
-                    self.Op = addrspec
-                    break
                 self.Op = op
                 break
         self.A = a

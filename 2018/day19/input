@@ -1,7 +1,7 @@
 #ip 3
 addi 3 16 3
 seti 1 8 5
-setr 5 0 4
+seti 1 0 4
 mulr 5 4 2
 eqrr 2 1 2
 addr 2 3 3
