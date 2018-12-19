@@ -1,6 +1,4 @@
-import copy
-import math
-import operator
+from functools import reduce
 import re
 
 
@@ -123,9 +121,6 @@ def parseData(filepath, instructions):
     return ipReg
 
 
-from functools import reduce
-
-
 def factors(n):
     return set(
         reduce(
@@ -150,8 +145,11 @@ def runProgramInit(ipReg, instructions):
     registers[0] = 1
     while registers[ipReg] < len(instructions):
         i = instructions[registers[ipReg]]
-        if registers[ipReg] == 1:
-            return registers[1]
+        if i.Op == eqrr:
+            # from one hard coded value to one that at least works for two inputs
+            # there is only one eqrr that checks if a factor is found
+            # presumes the second argument is the number under test
+            return registers[i.B]
         i.Op(registers, i.A, i.B, i.C)
         registers[ipReg] += 1
 
