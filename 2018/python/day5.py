@@ -1,6 +1,7 @@
 import re
 import string
 
+
 def reactPolymer(input):
     output = ""
     for c in input:
@@ -10,19 +11,23 @@ def reactPolymer(input):
             output += c
     return output
 
-f = open("day5/input", "r")
-lines = f.read().splitlines()
-input = lines[0]
 
-removeAllPolymer = reactPolymer(input)
-print(len(removeAllPolymer))
+def main():
+    f = open("day5/input", "r")
+    input = f.read()
 
-removedCharLength = {}
-for uc in string.ascii_lowercase:
-    newInput = re.sub(uc, '', input)
-    newInput = re.sub(uc.upper(), '', newInput)
-    shortenedPolymer = reactPolymer(newInput)
-    removedCharLength[uc] = len(shortenedPolymer)
+    removeAllPolymer = reactPolymer(input)
+    print("Length after reaction:", len(removeAllPolymer))
 
-bestChar = min(removedCharLength.items(), key=lambda c: c[1])
-print(bestChar)
+    removedCharLength = []
+    for uc in string.ascii_lowercase:
+        newInput = re.sub(uc, "", input, flags=re.IGNORECASE)
+        shortenedPolymer = reactPolymer(newInput)
+        removedCharLength.append((uc, len(shortenedPolymer)))
+
+    bestChar = min(removedCharLength, key=lambda c: c[1])
+    print("Shortest polymer when removing:", bestChar)
+
+
+if __name__ == "__main__":
+    main()
