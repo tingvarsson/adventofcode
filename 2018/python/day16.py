@@ -18,7 +18,7 @@ class sampleData(executionData):
         self.MatchingOpcodes = []
 
 
-def parseTrainingData(filepath, output):
+def parseTrainingData(filepath):
     f = open(filepath, "r")
     samples = re.split(r"\n\n", f.read())
     sampleRegexp = (
@@ -26,15 +26,16 @@ def parseTrainingData(filepath, output):
         r"(\d+) (\d+) (\d+) (\d+)\n"
         r"After:  \[(\d+), (\d+), (\d+), (\d+)\]"
     )
-    samplePattern = re.compile(sampleRegexp)
+    output = []
     for sample in samples:
-        m = samplePattern.search(sample)
+        m = re.search(sampleRegexp, sample)
         s = sampleData(
             [int(i) for i in m.group(1, 2, 3, 4)],
             [int(i) for i in m.group(9, 10, 11, 12)],
             *[int(i) for i in m.group(5, 6, 7, 8)]
         )
         output.append(s)
+    return output
 
 
 def checkTrainingData(trainingData):
@@ -50,7 +51,8 @@ def checkTrainingData(trainingData):
     print(numSamplesMinTripleMatches)
 
 
-def reduceMatchingOpcodes(traningData, opcodeTable):
+def reduceMatchingOpcodes(trainingData):
+    opcodeTable = {}
     while len(opcodeTable) != len(utils.availableOpcodes):
         opcode, op = [
             (s.Opcode, s.MatchingOpcodes[0])
@@ -61,17 +63,17 @@ def reduceMatchingOpcodes(traningData, opcodeTable):
         for sample in trainingData:
             if op in sample.MatchingOpcodes:
                 sample.MatchingOpcodes.remove(op)
+    return opcodeTable
 
 
-def parseData(filepath, output):
-    f = open(filepath, "r")
-    samples = f.read().splitlines()
-    sampleRegexp = r"(\d+) (\d+) (\d+) (\d+)"
-    samplePattern = re.compile(sampleRegexp)
+def parseData(filepath):
+    samples = utils.readlines(filepath)
+    output = []
     for sample in samples:
-        m = samplePattern.search(sample)
+        m = re.search(r"(\d+) (\d+) (\d+) (\d+)", sample)
         e = executionData(*[int(i) for i in m.group(1, 2, 3, 4)])
         output.append(e)
+    return output
 
 
 def runData(execData, opcodeTable):
@@ -81,11 +83,14 @@ def runData(execData, opcodeTable):
     print(register)
 
 
-trainingData = []
-opcodeTable = {}
-parseTrainingData("day16/input", trainingData)
-checkTrainingData(trainingData)
-reduceMatchingOpcodes(trainingData, opcodeTable)
-execData = []
-parseData("day16/input2", execData)
-runData(execData, opcodeTable)
+def main():
+    trainingData = parseTrainingData("day16/input")
+    checkTrainingData(trainingData)
+    opcodeTable = reduceMatchingOpcodes(trainingData)
+    execData = parseData("day16/input2")
+
+    runData(execData, opcodeTable)
+
+
+if __name__ == "__main__":
+    main()
