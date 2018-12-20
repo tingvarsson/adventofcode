@@ -1,45 +1,44 @@
-import math
 import re
+import utils
 
-f = open("day6/input", "r")
-lines = f.read().splitlines()
 
-coordRegex = r'(\d+), (\d+)'
-coordPattern = re.compile(coordRegex)
-coords = [] # [x, y, area]
-for line in lines:
-    coordMatch = coordPattern.search(line)
-    coord = [int(coordMatch.group(1)), int(coordMatch.group(2)), 0]
-    coords.append(coord)
+def main():
+    lines = utils.readlines("day6/input")
+    coords = [[int(m) for m in re.search(r"(\d+), (\d+)", l).groups()] for l in lines]
 
-maxX = max(coords, key=lambda c: c[0])[0] + 1
-maxY = max(coords, key=lambda c: c[1])[1] + 1
+    maxX = max(coords, key=lambda c: c[0])[0] + 1
+    maxY = max(coords, key=lambda c: c[1])[1] + 1
+    coordAreas = [0] * len(coords)
+    scenarioTwoArea = 0
+    for x in range(maxX):
+        for y in range(maxY):
+            closestCoord = 0
+            shortestDistance = None
+            totalDistance = 0
+            for i, coord in enumerate(coords):
+                distance = abs(x - coord[0]) + abs(y - coord[1])
+                if shortestDistance is None or distance < shortestDistance:
+                    closestCoord = i
+                    shortestDistance = distance
+                elif distance == shortestDistance:
+                    closestCoord = -1  # tie between several coords
 
-scenarioTwoArea = 0
-for x in range(maxX):
-    for y in range(maxY):
-        closestCoord = 0
-        shortestDistance = 1000000
-        totalDistance = 0
-        for i, coord in enumerate(coords):
-            distance = abs(x-coord[0]) + abs(y-coord[1])
-            if distance < shortestDistance:
-                closestCoord = i
-                shortestDistance = distance
-            elif distance == shortestDistance:
-                closestCoord = -1 # tie between several coords
-            
-            totalDistance += distance
-        
-        if totalDistance < 10000:
-            scenarioTwoArea += 1
+                totalDistance += distance
 
-        if closestCoord == -1 or coords[closestCoord][2] == -1:
-            continue
-        if x == maxX-1 or x == 0 or y == maxY-1 or y == 0:
-            coords[closestCoord][2] = -1 # infinite area
-        else:
-            coords[closestCoord][2] += 1
+            if totalDistance < 10000:
+                scenarioTwoArea += 1
 
-print(max(coords, key=lambda c: c[2]))
-print(scenarioTwoArea)
+            if closestCoord == -1 or coordAreas[closestCoord] == -1:
+                continue
+
+            if 0 < x < maxX - 1 and 0 < y < maxY - 1:
+                coordAreas[closestCoord] += 1
+            else:
+                coordAreas[closestCoord] = -1  # infinite area
+
+    print("Largest area around one coord:", max(coordAreas))
+    print("Area with a distance of less than 10000 to all coords:", scenarioTwoArea)
+
+
+if __name__ == "__main__":
+    main()
