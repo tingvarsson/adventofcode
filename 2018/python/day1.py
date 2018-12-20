@@ -1,25 +1,26 @@
 import bisect
+import utils
 
-f = open("day1/input", "r")
-fl = f.readlines()
-numbers = []
-for l in fl:
-    numbers.append(int(l))
 
-sum = 0
-for n in numbers:
-    sum += n
-print(sum)
+def main():
+    lines = utils.readlines("day1/input")
+    numbers = [int(l) for l in lines]
 
-sum = 0
-i = 0
-knownsums = [0]
-while True:
-    sum += numbers[i % len(numbers)]
-    pos = bisect.bisect_left(knownsums, sum)
-    if pos != len(knownsums) and knownsums[pos] == sum:
-        break
-    else:
-        bisect.insort(knownsums, sum)
-        i += 1
-print(sum)
+    print("Sum of numbers:", sum(numbers))
+
+    currentSum = 0
+    i = 0
+    knownSums = []
+    while True:
+        currentSum += numbers[i % len(numbers)]
+        pos = bisect.bisect_left(knownSums, currentSum)
+        if pos != len(knownSums) and knownSums[pos] == currentSum:
+            break
+        else:
+            bisect.insort(knownSums, currentSum)
+            i += 1
+    print("First reoccuring sum:", currentSum)
+
+
+if __name__ == "__main__":
+    main()
