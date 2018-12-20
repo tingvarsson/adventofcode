@@ -10,9 +10,9 @@ func TestDetermineOrder(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"../../../day7/example", utils.ReadFileToString("../../../day7/example_answer1")},
-		{"../../../day7/input", utils.ReadFileToString("../../../day7/input_answer1")},
-		{"../../../day7/input2", utils.ReadFileToString("../../../day7/input2_answer1")},
+		{"../../../day7/example", utils.ReadFileToLines("../../../day7/example_answer")[0]},
+		{"../../../day7/input", utils.ReadFileToLines("../../../day7/input_answer")[0]},
+		{"../../../day7/input2", utils.ReadFileToLines("../../../day7/input2_answer")[0]},
 	}
 	for _, test := range tests {
 		if output := determineWorkOrder(test.input); output != test.expected {
