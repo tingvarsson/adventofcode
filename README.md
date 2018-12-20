@@ -13,7 +13,7 @@
 | 9   | [data](2018/day9/)  | [src](2018/python/day9.py)  | [src](2018/go/src/day9/day9.go)   |                                   |           |             |
 | 10  | [data](2018/day10/) | [src](2018/python/day10.py) | [src](2018/go/src/day10/day10.go) |                                   |           |             |
 | 11  |                     | [src](2018/python/day11.py) | [src](2018/go/src/day11/day11.go) |                                   |           |             |
-| 12  | [data](2018/day12/) |                             | [src](2018/go/src/day12/day12.go) |                                   |           |             |
+| 12  | [data](2018/day12/) | [src](2018/python/day12.py) | [src](2018/go/src/day12/day12.go) |                                   |           |             |
 | 13  | [data](2018/day13/) | [src](2018/python/day13.py) | [src](2018/go/src/day13/day13.go) |                                   |           |             |
 | 14  |                     | [src](2018/python/day14.py) | [src](2018/go/src/day14/day14.go) |                                   |           |             |
 | 15  | [data](2018/day15/) | [src](2018/python/day15.py) |                                   |                                   |           |             |
@@ -21,7 +21,7 @@
 | 17  | [data](2018/day17/) | [src](2018/python/day17.py) |                                   |                                   |           |             |
 | 18  | [data](2018/day18/) | [src](2018/python/day18.py) |                                   |                                   |           |             |
 | 19  | [data](2018/day19/) | [src](2018/python/day19.py) |                                   |                                   |           |             |
-| 20  |                     |                             |                                   |                                   |           |             |
+| 20  | [data](2018/day20/) | [src](2018/python/day20.py) |                                   |                                   |           |             |
 | 21  |                     |                             |                                   |                                   |           |             |
 | 22  |                     |                             |                                   |                                   |           |             |
 | 23  |                     |                             |                                   |                                   |           |             |
