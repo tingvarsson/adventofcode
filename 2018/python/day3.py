@@ -1,46 +1,50 @@
 import re
+import utils
 
-inches = 1000
-fabric = [[0 for i in range(inches)] for j in range(inches)]
-
-f = open("day3/input", "r")
-fl = f.read().splitlines()
 
 def createClaim(line):
-    #           id      x     y      xsize ysize
-    regex = r'#(\d+) @ (\d+),(\d+): (\d+)x(\d+)'
-    pattern = re.compile(regex)
-    m = pattern.match(line)
-    claim = { 'id' : int(m.group(1)),
-              'x' : int(m.group(2)),
-              'y' : int(m.group(3)),
-              'xsize' : int(m.group(4)),
-              'ysize' : int(m.group(5)) }
+    #                id      x     y      xsize ysize
+    m = re.match(r"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)", line)
+    claim = {
+        "id": int(m.group(1)),
+        "x": int(m.group(2)),
+        "y": int(m.group(3)),
+        "xsize": int(m.group(4)),
+        "ysize": int(m.group(5)),
+    }
     return claim
 
-def addClaim(claim):
-    for x in range(claim["xsize"]):
-        for y in range(claim["ysize"]):
-            fabric[claim["x"]+x][claim["y"]+y] += 1
 
-def testClaim(claim):
-    for x in range(claim["xsize"]):
-        for y in range(claim["ysize"]):
-            if fabric[claim["x"]+x][claim["y"]+y] >= 2:
+def addClaim(fabric, claim):
+    for y in range(claim["y"], claim["y"] + claim["ysize"]):
+        for x in range(claim["x"], claim["x"] + claim["xsize"]):
+            fabric[y][x] += 1
+
+
+def testClaim(fabric, claim):
+    for y in range(claim["y"], claim["y"] + claim["ysize"]):
+        for x in range(claim["x"], claim["x"] + claim["xsize"]):
+            if fabric[y][x] >= 2:
                 return False
     return True
 
-claims = []
-for line in fl:
-    claims.append(createClaim(line))
 
-for claim in claims:
-    addClaim(claim)
+def main():
+    lines = utils.readlines("day3/input")
+    claims = [createClaim(l) for l in lines]
 
-sumofmultiple = sum(sum(1 for y in x if y >= 2) for x in fabric)
-print(sumofmultiple)
+    inches = 1000
+    fabric = [[0 for x in range(inches)] for y in range(inches)]
+    for claim in claims:
+        addClaim(fabric, claim)
 
-for claim in claims:
-    if testClaim(claim):
-        print(claim)
+    sumMultiple = sum(sum(1 for x in y if x >= 2) for y in fabric)
+    print("Square inches with multiple claims:", sumMultiple)
 
+    for claim in claims:
+        if testClaim(fabric, claim):
+            print("Non-overlapping claim:", claim)
+
+
+if __name__ == "__main__":
+    main()
