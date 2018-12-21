@@ -38,15 +38,31 @@ def runProgram(ip, instructions):
     seenNumbers = []
     while True:
         i = instructions[registers[ip]]
-        if i.Op == utils.addi and i.A == 2 and i.B == 1 and i.C == 2:
-            registers[2] = (registers[3] // 256) - 1
+
+        # -- OPTIMIZATION OF ZE PROGRAM --
+        # Exist a loop that basically calculates a div by 256 using loop+multiplication
+        # lets break the loop and inject the value directly
+        if i.Op == utils.gtrr:
+            # Break out of div256 loop by overriding true in gtrr check
+            registers[i.C] = 1
+            registers[ip] += 1
+            continue
+        if i.Op == utils.setr:
+            # Override assignment by a direct calcuation
+            registers[i.C] = registers[i.C] // 256
+            registers[ip] += 1
+            continue
+        # -- END OF OPTIMIZATION --
+
         if i.Op == utils.eqrr:
-            if registers[4] in seenNumbers:
+            # The end program check is done with a eqrr towards register 0
+            if registers[i.A] in seenNumbers:
                 print("Integer to break as earliest:", seenNumbers[0])
                 print("Integer to break at the latest:", seenNumbers[-1])
                 break
             else:
-                seenNumbers.append(registers[4])
+                seenNumbers.append(registers[i.A])
+
         i.Op(registers, i.A, i.B, i.C)
         registers[ip] += 1
 
