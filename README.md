@@ -30,10 +30,10 @@
 | 19  | [data](2018/day19/) | [src](2018/python/day19.py) |                                   |                                   |
 | 20  | [data](2018/day20/) | [src](2018/python/day20.py) |                                   |                                   |
 | 21  | [data](2018/day21/) | [src](2018/python/day21.py) |                                   |                                   |
-| 22  |                     |                             |                                   |                                   |
-| 23  |                     |                             |                                   |                                   |
-| 24  |                     |                             |                                   |                                   |
-| 25  |                     |                             |                                   |                                   |
+| 22  | [data](2018/day22/) | [src](2018/python/day22.py) |                                   |                                   |
+| 23  | [data](2018/day23/) | [src](2018/python/day23.py) |                                   |                                   |
+| 24  | [data](2018/day24/) | [src](2018/python/day24.py) |                                   |                                   |
+| 25  | [data](2018/day25/) | [src](2018/python/day25.py) |                                   |                                   |
 
 ## 2015
 | Day | Input               | Go                                |
