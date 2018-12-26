@@ -1,5 +1,6 @@
 import re
 
+
 def parseCoords(filepath):
     f = open(filepath, "r")
     lines = f.read().splitlines()
@@ -10,8 +11,10 @@ def parseCoords(filepath):
         coords.append([int(i) for i in m.groups()])
     return coords
 
+
 def dist(a, b):
-    return abs(a[0]-b[0])+abs(a[1]-b[1])+abs(a[2]-b[2])+abs(a[3]-b[3])
+    return abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2]) + abs(a[3] - b[3])
+
 
 def main():
     coords = parseCoords("day25/input")
@@ -19,7 +22,7 @@ def main():
     for c in coords:
         found = []
         for co in constellations:
-            if any(dist(c, coord)<=3 for coord in co):
+            if any(dist(c, coord) <= 3 for coord in co):
                 found.append(co)
         if found:
             newCo = [c]
@@ -32,5 +35,7 @@ def main():
             constellations.append([c])
     print(len(constellations))
 
+
 if __name__ == "__main__":
-  main()
+    main()
+
