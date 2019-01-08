@@ -45,5 +45,4 @@ func run(filepath string, numSantas int) (housesCovered int) {
 }
 
 func main() {
-
 }
