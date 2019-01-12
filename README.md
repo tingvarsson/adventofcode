@@ -43,8 +43,8 @@
 | 3   | [data](2015/day3/)  | [src](2015/go/src/day3/day3.go)  |
 | 4   |                     | [src](2015/go/src/day4/day4.go)  |
 | 5   | [data](2015/day5/)  | [src](2015/go/src/day5/day5.go)  |
-| 6   |                     |                                  |
-| 7   |                     |                                  |
+| 6   | [data](2015/day6/)  | [src](2015/go/src/day6/day6.go)  |
+| 7   | [data](2015/day7/)  | [src](2015/go/src/day7/day7.go)  |
 | 8   |                     |                                  |
 | 9   |                     |                                  |
 | 10  |                     |                                  |
