@@ -19,18 +19,18 @@ func parseWires(filepath string) (wires wireMap) {
 	return
 }
 
+var opRegex = regexp.MustCompile("^(\\w*) ?(\\b[A-Z]+\\b) (\\w+)$")
+
 func getValue(wires wireMap, wire string) uint16 {
 	if i, err := strconv.Atoi(wire); err == nil {
+		// endpoint reached and an actual value is found
 		return uint16(i)
 	}
-	opRegex := regexp.MustCompile("^(.+) ([A-Z]+) (.+)$")
-	notRegex := regexp.MustCompile("^NOT (.*)$")
 
-	connection := wires[wire]
-	if i, err := strconv.Atoi(connection); err == nil {
-		return uint16(i)
-	} else if m := opRegex.FindStringSubmatch(connection); len(m) != 0 {
-		var value uint16
+	// Either an expression (AND, OR, L/RSHIFT, NOT) or a reference
+	var value uint16
+	expr := wires[wire]
+	if m := opRegex.FindStringSubmatch(expr); len(m) != 0 {
 		switch m[2] {
 		case "AND":
 			value = getValue(wires, m[1]) & getValue(wires, m[3])
@@ -40,18 +40,17 @@ func getValue(wires wireMap, wire string) uint16 {
 			value = getValue(wires, m[1]) << getValue(wires, m[3])
 		case "RSHIFT":
 			value = getValue(wires, m[1]) >> getValue(wires, m[3])
+		case "NOT":
+			value = ^getValue(wires, m[3])
 		default:
 			panic("unknown OP")
 		}
-		wires[wire] = strconv.Itoa(int(value))
-		return value
-	} else if m := notRegex.FindStringSubmatch(connection); len(m) != 0 {
-		value := ^getValue(wires, m[1])
-		wires[wire] = strconv.Itoa(int(value))
-		return value
 	} else {
-		return getValue(wires, connection)
+		value = getValue(wires, expr)
 	}
+	// Write back the found wire value to speed up future lookups
+	wires[wire] = strconv.Itoa(int(value))
+	return value
 }
 
 func run(filepath string, lookup string) uint16 {
