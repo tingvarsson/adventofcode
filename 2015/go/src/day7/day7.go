@@ -11,7 +11,7 @@ type wireMap map[string]string
 func parseWires(filepath string) (wires wireMap) {
 	re := regexp.MustCompile("^(.*) -> (.*)$")
 	lines := utils.ReadFileToLines(filepath)
-	wires = make(map[string]string)
+	wires = make(wireMap)
 	for _, l := range lines {
 		m := re.FindStringSubmatch(l)
 		wires[m[2]] = m[1]
