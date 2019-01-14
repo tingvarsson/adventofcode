@@ -25,6 +25,14 @@ func Atoi(s string) int {
 	return n
 }
 
+// AtoiSlice returns a slice of integer values given as string s
+func AtoiSlice(s string) (ints []int) {
+	for _, r := range s {
+		ints = append(ints, Atoi(string(r)))
+	}
+	return
+}
+
 // Insert inserts v at index i into []int s
 func Insert(s *[]int, i int, v int) {
 	*s = append(*s, 0)
