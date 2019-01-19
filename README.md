@@ -48,7 +48,7 @@
 | 8   | [data](2015/day8/)  | [src](2015/go/src/day8/day8.go)  |
 | 9   | [data](2015/day9/)  | [src](2015/go/src/day9/day9.go)  |
 | 10  | [data](2015/day10/) | [src](2015/go/src/day10/day10.go)|
-| 11  |                     |                                  |
+| 11  | [data](2015/day11/) | [src](2015/go/src/day11/day11.go)|
 | 12  |                     |                                  |
 | 13  |                     |                                  |
 | 14  |                     |                                  |
