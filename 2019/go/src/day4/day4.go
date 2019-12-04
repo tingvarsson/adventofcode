@@ -4,40 +4,34 @@ import (
 	"strconv"
 )
 
-func ruleCheck(input string) bool {
-	adjacentFound := false
+func ruleCheck(input string) (ok bool) {
+	ok = false
 	for i := 0; i < len(input)-1; i++ {
 		if input[i] == input[i+1] {
-			adjacentFound = true
+			ok = true
 		} else if input[i] > input[i+1] {
 			return false
 		}
-		if i >= len(input)-1 {
-			break
-		}
 	}
-	return adjacentFound
+	return
 }
 
-func ruleCheck2(input string) bool {
-	twoAdjacentFound := false
+func ruleCheck2(input string) (ok bool) {
+	ok = false
 	for i := 0; i < len(input)-1; i++ {
-		if !twoAdjacentFound && input[i] == input[i+1] {
-			twoAdjacentFound = true
+		if !ok && input[i] == input[i+1] {
+			ok = true
 			if i > 0 && input[i-1] == input[i] {
-				twoAdjacentFound = false
+				ok = false
 			}
 			if i < len(input)-2 && input[i+1] == input[i+2] {
-				twoAdjacentFound = false
+				ok = false
 			}
 		} else if input[i] > input[i+1] {
 			return false
 		}
-		if i >= len(input)-1 {
-			break
-		}
 	}
-	return twoAdjacentFound
+	return
 }
 
 func run(start, stop int) (found, found2 int) {
