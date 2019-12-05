@@ -6,9 +6,9 @@ import (
 
 func TestRun(t *testing.T) {
 	var tests = []struct {
-		input     string
-		e1  int
-		e2 int
+		input string
+		e1    int
+		e2    int
 	}{
 		{"../../../day3/example", 6, 30},
 		{"../../../day3/example2", 159, 610},

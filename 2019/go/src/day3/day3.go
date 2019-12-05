@@ -16,9 +16,9 @@ type step struct {
 var stepRegex = regexp.MustCompile("([A-Z])(\\d+)")
 
 type wire struct {
-	x int
-	y int
-	d int
+	x    int
+	y    int
+	d    int
 	path []step
 }
 
