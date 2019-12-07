@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"code-runner.fileDirectoryAsCwd": true,
+		"go.gopath": "${workspaceRoot}/go",
+		"go.testFlags": [
+			"-v"
+		],
+		"go.testTimeout": "60s",
+		"go.testEnvVars": {
+			"ROOT": "${workspaceRoot}",
+		},
+		"terminal.integrated.env.linux": {
+			"ROOT": "${workspaceRoot}",
+		},
+	}
+}
