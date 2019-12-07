@@ -1,11 +1,13 @@
-use std::fs::File;
 use std::collections::HashMap;
+use std::env;
+use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
 use std::path::Path;
 
 fn main() -> Result<()> {
-    let path = Path::new("day2/input");
-    let file = File::open(&path)?;
+    let root = env::var("ROOT").unwrap();
+    let path = root.to_string() + "/2018/day2/input";
+    let file = File::open(&Path::new(&path))?;
     let mut lines: Vec<String> = vec![];
     for line in BufReader::new(file).lines() {
         lines.push(line?)
@@ -35,7 +37,7 @@ fn main() -> Result<()> {
             }
         }
     }
-    println!("Checksum: {}", sumoftwo*sumofthree);
+    println!("Checksum: {}", sumoftwo * sumofthree);
 
     for line in &lines {
         for secondline in &lines {
@@ -45,9 +47,9 @@ fn main() -> Result<()> {
                     out += &c.to_string();
                 }
             }
-            if line.len()-1 == out.len() {
+            if line.len() - 1 == out.len() {
                 println!("same line: {}", out);
-                return Ok(())
+                return Ok(());
             }
         }
     }

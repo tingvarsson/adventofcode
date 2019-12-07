@@ -3,4 +3,7 @@ name = "day2"
 version = "0.1.0"
 authors = ["Thomas Ingvarsson <ingvarsson.thomas@gmail.com>"]
 
+[[bin]]
+name = "day2"
+
 [dependencies]
