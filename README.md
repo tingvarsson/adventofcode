@@ -14,8 +14,8 @@
 |   3   | [data](2019/day3/) | [src](go/src/2019/day3/day3.go) |
 |   4   |                    | [src](go/src/2019/day4/day4.go) |
 |   5   | [data](2019/day5/) | [src](go/src/2019/day5/day5.go) |
-|   6   |                    |                                 |
-|   7   |                    |                                 |
+|   6   | [data](2019/day6/) | [src](go/src/2019/day6/day7.go) |
+|   7   | [data](2019/day7/) | [src](go/src/2019/day7/day7.go) |
 |   8   |                    |                                 |
 |   9   |                    |                                 |
 |  10   |                    |                                 |
