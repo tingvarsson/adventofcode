@@ -17,6 +17,7 @@ func getValue(memory []int, param int, mode int) int {
 
 func runProg(memory []int, i1, i2, i int) (o, stop int) {
 	o = i2
+	fmt.Println("start")
 	for true {
 		op := memory[i] % 100
 		m1 := (memory[i] / 100) % 10
@@ -69,6 +70,8 @@ func runProg(memory []int, i1, i2, i int) (o, stop int) {
 			stop = 0
 			break
 		}
+
+		fmt.Printf("%v %v %v %v %v\n", i, op, m1, m2, o)
 	}
 	return
 }
