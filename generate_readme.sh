@@ -20,10 +20,11 @@ do
     for i in {1..25}
     do
         day="|$i|"
-        if [ -d "$year/day$i" ]; then
-            day="${day}[data]($year/day$i/)|"
-        else
+        data=$(git ls-files | grep -E "^${year}/day${i}/")
+        if [ -z "$data" ]; then
             day="${day}|"
+        else
+            day="${day}[data]($year/day$i/)|"
         fi
         for lang in $LANG_DIRS
         do
