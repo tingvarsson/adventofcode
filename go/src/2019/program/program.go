@@ -5,7 +5,7 @@ type Program struct {
 	memory       []int
 	instr        int
 	relativeBase int
-	input        []int
+	Input        []int
 	Output       []int
 	Halted       bool
 }
@@ -19,30 +19,16 @@ func New(memory []int) Program {
 	return Program{m, 0, 0, []int{}, []int{}, false}
 }
 
-func (p Program) get(addr, mode int) int {
-	param := p.memory[addr]
-	if mode == 0 {
-		return p.memory[param]
-	} else if mode == 1 {
-		return param
-	} else if mode == 2 {
-		return p.memory[p.relativeBase+param]
-	}
-	return 0
-}
-
-func (p *Program) set(addr, mode, value int) {
-	param := p.memory[addr]
-	if mode == 2 {
-		p.memory[p.relativeBase+param] = value
-	} else {
-		p.memory[param] = value
-	}
+// PopOutput pops and returns the oldest output
+func (p *Program) PopOutput() int {
+	o := p.Output[0]
+	p.Output = p.Output[1:]
+	return o
 }
 
 // Run makes the program go around
 func (p *Program) Run(newInput []int) bool {
-	p.input = append(p.input, newInput...)
+	p.Input = append(p.Input, newInput...)
 
 	for true {
 		op := p.memory[p.instr] % 100
@@ -56,11 +42,11 @@ func (p *Program) Run(newInput []int) bool {
 			p.set(p.instr+3, m3, p.get(p.instr+1, m1)*p.get(p.instr+2, m2))
 			p.instr += 4
 		} else if op == 3 {
-			if len(p.input) == 0 {
+			if len(p.Input) == 0 {
 				break
 			}
-			p.set(p.instr+1, m1, p.input[0])
-			p.input = p.input[1:] // dequeue
+			p.set(p.instr+1, m1, p.Input[0])
+			p.Input = p.Input[1:] // dequeue
 			p.instr += 2
 		} else if op == 4 {
 			p.Output = append(p.Output, p.get(p.instr+1, m1))
@@ -100,4 +86,25 @@ func (p *Program) Run(newInput []int) bool {
 		}
 	}
 	return p.Halted
+}
+
+func (p Program) get(addr, mode int) int {
+	param := p.memory[addr]
+	if mode == 0 {
+		return p.memory[param]
+	} else if mode == 1 {
+		return param
+	} else if mode == 2 {
+		return p.memory[p.relativeBase+param]
+	}
+	return 0
+}
+
+func (p *Program) set(addr, mode, value int) {
+	param := p.memory[addr]
+	if mode == 2 {
+		p.memory[p.relativeBase+param] = value
+	} else {
+		p.memory[param] = value
+	}
 }

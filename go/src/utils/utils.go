@@ -72,6 +72,33 @@ func MaxValue(array []int) (value int) {
 	return
 }
 
+// Permutations takes a int array and returns all permutations
+func Permutations(input []int) (output [][]int) {
+	var helper func([]int, int)
+	helper = func(input []int, n int) {
+		if n == 1 {
+			tmp := make([]int, len(input))
+			copy(tmp, input)
+			output = append(output, tmp)
+			return
+		}
+		for i := 0; i < n; i++ {
+			helper(input, n-1)
+			if n%2 == 1 {
+				tmp := input[i]
+				input[i] = input[n-1]
+				input[n-1] = tmp
+			} else {
+				tmp := input[0]
+				input[0] = input[n-1]
+				input[n-1] = tmp
+			}
+		}
+	}
+	helper(input, len(input))
+	return
+}
+
 // ReadFileToLines reads filepath and returns the content as a []string
 func ReadFileToLines(filepath string) (lines []string) {
 	file, err := os.Open(filepath)
