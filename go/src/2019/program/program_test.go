@@ -27,11 +27,7 @@ func TestRunProg(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		prog := make([]int, 10000)
-		for i, p := range test.prog {
-			prog[i] = p
-		}
-		p := New(prog)
+		p := New(test.prog)
 		if _ = p.Run([]int{test.input}); p.Output[len(p.Output)-1] != test.expected {
 			t.Errorf("Test Failed: %v input, %v expected, recieved: %v", test.input, test.expected, p.Output[len(p.Output)-1])
 		}

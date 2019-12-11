@@ -7,12 +7,16 @@ type Program struct {
 	relativeBase int
 	input []int
 	Output []int
-	halted bool
+	Halted bool
 }
 
 // New constructs a Program
 func New(memory []int) Program {
-	return Program{memory, 0, 0, []int{}, []int{}, false}
+	m := make([]int, 10000)
+	for i := range memory {
+		m[i] = memory[i]
+	}
+	return Program{m, 0, 0, []int{}, []int{}, false}
 }
 
 func (p Program) get(addr, mode int) int {
@@ -91,7 +95,7 @@ func (p *Program) Run(newInput []int) bool {
 			p.relativeBase += p.get(p.instr+1, m1)
 			p.instr += 2
 		} else if op == 99 {
-			p.halted = true
+			p.Halted = true
 			break
 		}
 	}
