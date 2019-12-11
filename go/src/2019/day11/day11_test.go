@@ -8,15 +8,16 @@ import (
 func TestRun(t *testing.T) {
 	var tests = []struct {
 		input     string
+		input2    int
 		expected  int
-		expected2 int
 	}{
-		{os.Getenv("ROOT") + "/2019/day11/input", 3765554916, 76642},
+		{os.Getenv("ROOT") + "/2019/day11/input", 0, 2252},
+		{os.Getenv("ROOT") + "/2019/day11/input", 1, 248},
 	}
 
 	for _, test := range tests {
-		if o1, o2 := run(test.input); o1 != test.expected {
-			t.Errorf("Test Failed: %v input, %v %v expected, recieved: %v %v", test.input, test.expected, test.expected2, o1, o2)
+		if o1 := run(test.input, test.input2); o1 != test.expected {
+			t.Errorf("Test Failed: %v input, %v expected, recieved: %v", test.input, test.expected, o1)
 		}
 	}
 }

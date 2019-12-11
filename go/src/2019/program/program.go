@@ -2,12 +2,12 @@ package program
 
 // Program is a thingy
 type Program struct {
-	memory []int
-	instr int
+	memory       []int
+	instr        int
 	relativeBase int
-	input []int
-	Output []int
-	Halted bool
+	input        []int
+	Output       []int
+	Halted       bool
 }
 
 // New constructs a Program
@@ -99,5 +99,5 @@ func (p *Program) Run(newInput []int) bool {
 			break
 		}
 	}
-	return p.halted
+	return p.Halted
 }

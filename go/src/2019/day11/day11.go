@@ -8,24 +8,24 @@ import (
 	"utils"
 )
 
-type Direction int
+type direction int
 
 const (
-	Up Direction = iota
-	Right
-	Down
-	Left
+	up direction = iota
+	right
+	down
+	left
 )
 
-func turn(d Direction, i int) Direction {
+func turn(d direction, i int) direction {
 	if i == 0 {
-		if d == Up {
-			return Left
+		if d == up {
+			return left
 		}
 		return d-1
 	} else {
-		if d == Left {
-			return Up
+		if d == left {
+			return up
 		}
 		return d+1
 	}
@@ -34,10 +34,18 @@ func turn(d Direction, i int) Direction {
 type coord struct {
 	X int
 	Y int
-	Color int
 }
 
-func run(filepath string) (result, result2 int) {
+func find(cs []coord, a coord) bool {
+	for _, c := range cs {
+		if c == a {
+			return true
+		}
+	}
+	return false
+}
+
+func run(filepath string, i int) (result int) {
 	input := utils.ReadFileToString(filepath)
 	inputData := strings.Split(input, ",")
 	var intcode []int
@@ -46,31 +54,57 @@ func run(filepath string) (result, result2 int) {
 	}
 
 	var visited []coord
-	current := coord{0, 0, 0}
-	var dir Direction = Up
+	colors := make(map[coord]int)
+	current := coord{0, 0}
+	colors[current] = i
+	dir := up
 	p := program.New(intcode)
-	for p.Run([]int{current.Color}); !p.Halted {
-		newColor, turn := p.Output[0], p.Output[1]
-		current.Color = newColor
-		visited = append(visited, current)
-		dir = turn(dir, turn)
-		if dir == Up {
-			current.Y++
-		} else if dir == Right {
-			current.X++
-		} else if dir == Down {
-			current.Y--
-		} else if dir == Left {
-			current.X--
+	for true {
+		p.Output = []int{}
+		p.Run([]int{colors[current]})
+		if p.Halted {
+			break
+		}
+		colors[current] = p.Output[0]
+		if !find(visited, current) {
+			visited = append(visited, current)
+		}
+		dir = turn(dir, p.Output[1])
+		x := current.X
+		y := current.Y
+		if dir == up {
+			y--
+		} else if dir == right {
+			x++
+		} else if dir == down {
+			y++
+		} else if dir == left {
+			x--
+		}
+		current = coord{x, y}
+	}
+
+	result = len(visited)
+
+	if i == 1 {
+		hull := make([][]int, 6)
+		for i := range hull {
+			hull[i] = make([]int, 50)
 		}
 
+		for _, c := range visited {
+			hull[c.Y][c.X] = colors[c]
+		}
+
+		for row := range hull {
+			fmt.Println(hull[row])
+		}
 	}
 
 	return
 }
 
 func main() {
-	r1, r2 := run(os.Args[1])
+	r1 := run(os.Args[1], 0)
 	fmt.Println(r1)
-	fmt.Println(r2)
 }
