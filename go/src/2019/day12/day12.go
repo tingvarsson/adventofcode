@@ -112,12 +112,12 @@ func run(filepath string, iterations int) (result, result2 int) {
 		moons = append(moons, moon{p, vel{0, 0, 0}})
 	}
 
-	var occured []map[moon]int
-	reoccur := make([][]int, len(moons))
-	for range moons {
-		occured = append(occured, make(map[moon]int))
+	var occurs []map[[4]int]int
+	for i := 0; i < 3; i++ {
+		occurs = append(occurs, make(map[[4]int]int))
 	}
-	for i := 0; true; i++ {
+	reoccur := make([][]int, 3)
+	for i := 0; i < 3000; i++ {
 		var grav []vel
 		for n := range moons {
 			g := vel{0, 0, 0}
@@ -130,26 +130,51 @@ func run(filepath string, iterations int) (result, result2 int) {
 			grav = append(grav, g)
 		}
 
+		var xCoords [4]int
+		var yCoords [4]int
+		var zCoords [4]int
 		for n := range moons {
 			moons[n].applyGravity(grav[n])
 			moons[n].applyVelocity()
-			if j, ok := occured[n][moons[n]]; ok {
-				reoccur[n] = []int{j, i - j}
-			} else {
-				occured[n][moons[n]] = i
+			xCoords[n] = moons[n].p.x
+			yCoords[n] = moons[n].p.y
+			zCoords[n] = moons[n].p.z
+		}
+
+		if j, ok := occurs[0][xCoords]; ok {
+			if reoccur[0] == nil || reoccur[0][1] != i-j {
+				reoccur[0] = []int{j, i - j}
+
 			}
 		}
-		foundAll := true
-		for _, r := range reoccur {
-			if r == nil {
-				foundAll = false
+		occurs[0][xCoords] = i
+
+		if j, ok := occurs[1][yCoords]; ok {
+			if reoccur[1] == nil || reoccur[1][1] != i-j {
+				reoccur[1] = []int{j, i - j}
 			}
 		}
-		if foundAll {
-			fmt.Println(reoccur)
-			return
+		occurs[1][yCoords] = i
+
+		if j, ok := occurs[2][zCoords]; ok {
+			if reoccur[2] == nil || reoccur[2][1] != i-j {
+				reoccur[2] = []int{j, i - j}
+			}
 		}
+		occurs[2][zCoords] = i
+
+		//foundAll := true
+		//for _, r := range reoccur {
+		//	if r == nil {
+		//		foundAll = false
+		//	}
+		//}
+		//if foundAll {
+		//	fmt.Println(reoccur)
+		//	return
+		//}
 	}
+	fmt.Println(reoccur)
 
 	return
 }

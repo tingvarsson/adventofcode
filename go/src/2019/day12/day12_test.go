@@ -14,7 +14,7 @@ func TestRun(t *testing.T) {
 	}{
 		{os.Getenv("ROOT") + "/2019/day12/example", 10, 179, 2772},
 		{os.Getenv("ROOT") + "/2019/day12/example2", 100, 1940, 4686774924},
-		//{os.Getenv("ROOT") + "/2019/day12/input", 1000, 14606, 0},
+		{os.Getenv("ROOT") + "/2019/day12/input", 1000, 14606, 0},
 	}
 
 	for _, test := range tests {
