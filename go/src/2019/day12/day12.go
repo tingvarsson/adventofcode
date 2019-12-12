@@ -4,141 +4,111 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"utils"
+	. "utils"
 )
 
-type pos struct {
-	x, y, z int
-}
-
-func addPos(a, b pos) (c pos) {
-	c.x = a.x + b.x
-	c.y = a.y + b.y
-	c.z = a.z + b.z
-	return
-}
-
-type vel struct {
-	x, y, z int
-}
-
-func addVel(a, b vel) (c vel) {
-	c.x = a.x + b.x
-	c.y = a.y + b.y
-	c.z = a.z + b.z
-	return
-}
-
 type moon struct {
-	p pos
-	v vel
+	p Dim3
+	v Dim3
 }
 
 func (m moon) energy() int {
-	pot := utils.Abs(m.p.x) + utils.Abs(m.p.y) + utils.Abs(m.p.z)
-	kin := utils.Abs(m.v.x) + utils.Abs(m.v.y) + utils.Abs(m.v.z)
+	pot := Abs(m.p.X) + Abs(m.p.Y) + Abs(m.p.Z)
+	kin := Abs(m.v.X) + Abs(m.v.Y) + Abs(m.v.Z)
 	return pot * kin
 }
 
-func (m moon) gravity(other moon) (g vel) {
-	g.x = 0
-	if m.p.x > other.p.x {
-		g.x = -1
-	} else if m.p.x < other.p.x {
-		g.x = 1
+func (m moon) gravity(other moon) (g Dim3) {
+	g.X = 0
+	if m.p.X > other.p.X {
+		g.X = -1
+	} else if m.p.X < other.p.X {
+		g.X = 1
 	}
-	g.y = 0
-	if m.p.y > other.p.y {
-		g.y = -1
-	} else if m.p.y < other.p.y {
-		g.y = 1
+	g.Y = 0
+	if m.p.Y > other.p.Y {
+		g.Y = -1
+	} else if m.p.Y < other.p.Y {
+		g.Y = 1
 	}
-	g.z = 0
-	if m.p.z > other.p.z {
-		g.z = -1
-	} else if m.p.z < other.p.z {
-		g.z = 1
+	g.Z = 0
+	if m.p.Z > other.p.Z {
+		g.Z = -1
+	} else if m.p.Z < other.p.Z {
+		g.Z = 1
 	}
 	return
 }
 
-func (m *moon) applyGravity(g vel) {
-	m.v = addVel(m.v, g)
+func (m *moon) applyGravity(g Dim3) {
+	m.v = m.v.Add(g)
 }
 
 func (m *moon) applyVelocity() {
-	m.p = addPos(m.p, pos{m.v.x, m.v.y, m.v.z})
+	m.p = m.p.Add(m.v)
 }
 
 var posRegex = regexp.MustCompile("<x=(-?\\d+), y=(-?\\d+), z=(-?\\d+)>")
 
-func run(filepath string, iterations int) (result, result2 int) {
-	data := utils.ReadFileToLines(filepath)
-
-	var moons []moon
+func parseMoons(data []string) (moons []moon) {
 	for _, line := range data {
 		match := posRegex.FindStringSubmatch(line)
-		p := pos{utils.Atoi(match[1]), utils.Atoi(match[2]), utils.Atoi(match[3])}
-		moons = append(moons, moon{p, vel{0, 0, 0}})
+		p := Dim3{Atoi(match[1]), Atoi(match[2]), Atoi(match[3])}
+		v := Dim3{0, 0, 0}
+		moons = append(moons, moon{p, v})
+	}
+	return
+}
+
+func runIteration(moons []moon) {
+	for n := range moons {
+		g := Dim3{0, 0, 0}
+		for _, m2 := range moons {
+			if moons[n] == m2 {
+				continue
+			}
+			g = g.Add(moons[n].gravity(m2))
+		}
+		moons[n].applyGravity(g)
 	}
 
-	for i := 0; i < iterations; i++ {
-		var grav []vel
-		for n := range moons {
-			g := vel{0, 0, 0}
-			for _, m2 := range moons {
-				if moons[n] == m2 {
-					continue
-				}
-				g = addVel(g, moons[n].gravity(m2))
-			}
-			grav = append(grav, g)
-		}
+	for n := range moons {
+		moons[n].applyVelocity()
+	}
+}
 
-		for n := range moons {
-			moons[n].applyGravity(grav[n])
-			moons[n].applyVelocity()
-		}
+func run(filepath string, iterations int) (result, result2 int) {
+	data := ReadFileToLines(filepath)
+	moons := parseMoons(data)
+
+	for i := 0; i < iterations; i++ {
+		runIteration(moons)
 	}
 
 	for _, m := range moons {
 		result += m.energy()
 	}
 
-	moons = []moon{}
-	for _, line := range data {
-		match := posRegex.FindStringSubmatch(line)
-		p := pos{utils.Atoi(match[1]), utils.Atoi(match[2]), utils.Atoi(match[3])}
-		moons = append(moons, moon{p, vel{0, 0, 0}})
-	}
+	moons = parseMoons(data)
 
-	var occurs []map[[4]int]int
+	var occurs []map[[2*4]int]int
 	for i := 0; i < 3; i++ {
-		occurs = append(occurs, make(map[[4]int]int))
+		occurs = append(occurs, make(map[[2*4]int]int))
 	}
 	reoccur := make([][]int, 3)
-	for i := 0; i < 3000; i++ {
-		var grav []vel
-		for n := range moons {
-			g := vel{0, 0, 0}
-			for _, m2 := range moons {
-				if moons[n] == m2 {
-					continue
-				}
-				g = addVel(g, moons[n].gravity(m2))
-			}
-			grav = append(grav, g)
-		}
+	for i := 0; true; i++ {
+		runIteration(moons)
 
-		var xCoords [4]int
-		var yCoords [4]int
-		var zCoords [4]int
+		var xCoords [2*4]int
+		var yCoords [2*4]int
+		var zCoords [2*4]int
 		for n := range moons {
-			moons[n].applyGravity(grav[n])
-			moons[n].applyVelocity()
-			xCoords[n] = moons[n].p.x
-			yCoords[n] = moons[n].p.y
-			zCoords[n] = moons[n].p.z
+			xCoords[2*n] = moons[n].p.X
+			xCoords[2*n+1] = moons[n].v.X
+			yCoords[2*n] = moons[n].p.Y
+			yCoords[2*n+1] = moons[n].v.Y
+			zCoords[2*n] = moons[n].p.Z
+			zCoords[2*n+1] = moons[n].v.Z
 		}
 
 		if j, ok := occurs[0][xCoords]; ok {
@@ -163,39 +133,19 @@ func run(filepath string, iterations int) (result, result2 int) {
 		}
 		occurs[2][zCoords] = i
 
-		//foundAll := true
-		//for _, r := range reoccur {
-		//	if r == nil {
-		//		foundAll = false
-		//	}
-		//}
-		//if foundAll {
-		//	fmt.Println(reoccur)
-		//	return
-		//}
+		foundAll := true
+		for _, r := range reoccur {
+			if r == nil {
+				foundAll = false
+			}
+		}
+		if foundAll {
+			result2 = LCM(reoccur[0][1], reoccur[1][1], reoccur[2][1])
+			return
+		}
 	}
-	fmt.Println(reoccur)
 
 	return
-}
-
-func gcd(a, b int) int {
-	for b != 0 {
-		t := b
-		b = a % b
-		a = t
-	}
-	return a
-}
-
-func lcm(a, b int, integers ...int) int {
-	result := a * b / gcd(a, b)
-
-	for i := 0; i < len(integers); i++ {
-		result = lcm(result, integers[i])
-	}
-
-	return result
 }
 
 func main() {

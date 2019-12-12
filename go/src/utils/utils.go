@@ -43,6 +43,16 @@ func GCD(a, b int) int {
 	return a
 }
 
+// Dim3 is a three dimensional representation
+type Dim3 struct {
+	X, Y, Z int
+}
+
+// Add returns a new Dim3 that is the sum of a and b
+func (a Dim3) Add(b Dim3) Dim3 {
+	return Dim3{a.X + b.X, a.Y + b.Y, a.Z + b.Z}
+}
+
 // Insert inserts v at index i into []int s
 func Insert(s *[]int, i int, v int) {
 	*s = append(*s, 0)
