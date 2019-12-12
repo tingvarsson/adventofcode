@@ -105,7 +105,72 @@ func run(filepath string, iterations int) (result, result2 int) {
 		result += m.energy()
 	}
 
+	moons = []moon{}
+	for _, line := range data {
+		match := posRegex.FindStringSubmatch(line)
+		p := pos{utils.Atoi(match[1]), utils.Atoi(match[2]), utils.Atoi(match[3])}
+		moons = append(moons, moon{p, vel{0, 0, 0}})
+	}
+
+	var occured []map[moon]int
+	reoccur := make([][]int, len(moons))
+	for range moons {
+		occured = append(occured, make(map[moon]int))
+	}
+	for i := 0; true; i++ {
+		var grav []vel
+		for n := range moons {
+			g := vel{0, 0, 0}
+			for _, m2 := range moons {
+				if moons[n] == m2 {
+					continue
+				}
+				g = addVel(g, moons[n].gravity(m2))
+			}
+			grav = append(grav, g)
+		}
+
+		for n := range moons {
+			moons[n].applyGravity(grav[n])
+			moons[n].applyVelocity()
+			if j, ok := occured[n][moons[n]]; ok {
+				reoccur[n] = []int{j, i - j}
+			} else {
+				occured[n][moons[n]] = i
+			}
+		}
+		foundAll := true
+		for _, r := range reoccur {
+			if r == nil {
+				foundAll = false
+			}
+		}
+		if foundAll {
+			fmt.Println(reoccur)
+			return
+		}
+	}
+
 	return
+}
+
+func gcd(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func lcm(a, b int, integers ...int) int {
+	result := a * b / gcd(a, b)
+
+	for i := 0; i < len(integers); i++ {
+		result = lcm(result, integers[i])
+	}
+
+	return result
 }
 
 func main() {
