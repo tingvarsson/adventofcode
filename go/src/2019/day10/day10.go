@@ -13,22 +13,12 @@ type coord struct {
 	Y int
 }
 
-func (c coord) GCD(o coord) int {
-	a, b := c.X-o.X, c.Y-o.Y
-	for b != 0 {
-		t := b
-		b = a % b
-		a = t
-	}
-	return a
-}
-
 func (c coord) Distance(o coord) int {
-	return utils.Abs(c.GCD(o))
+	return utils.Abs(utils.GCD(c.X-o.X, c.Y-o.Y))
 }
 
 func (c coord) Normalize(o coord) coord {
-	g := utils.Abs(c.GCD(o))
+	g := c.Distance(o)
 	return coord{(c.X - o.X) / g, (c.Y - o.Y) / g}
 }
 

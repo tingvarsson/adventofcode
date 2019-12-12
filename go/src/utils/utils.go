@@ -33,11 +33,32 @@ func AtoiSlice(s string) (ints []int) {
 	return
 }
 
+// GCD returns the greatest common divisor of a and b
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
 // Insert inserts v at index i into []int s
 func Insert(s *[]int, i int, v int) {
 	*s = append(*s, 0)
 	copy((*s)[i+1:], (*s)[i:])
 	(*s)[i] = v
+}
+
+// LCM returns the least common multiple of a,b,...
+func LCM(a, b int, integers ...int) int {
+	result := a * b / GCD(a, b)
+
+	for i := 0; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+
+	return result
 }
 
 // Max returns the maximum value, and its index, in []int s
