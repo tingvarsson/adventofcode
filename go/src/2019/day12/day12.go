@@ -91,17 +91,17 @@ func run(filepath string, iterations int) (result, result2 int) {
 
 	moons = parseMoons(data)
 
-	var occurs []map[[2*4]int]int
+	var occurs []map[[2 * 4]int]int
 	for i := 0; i < 3; i++ {
-		occurs = append(occurs, make(map[[2*4]int]int))
+		occurs = append(occurs, make(map[[2 * 4]int]int))
 	}
 	reoccur := make([][]int, 3)
 	for i := 0; true; i++ {
 		runIteration(moons)
 
-		var xCoords [2*4]int
-		var yCoords [2*4]int
-		var zCoords [2*4]int
+		var xCoords [2 * 4]int
+		var yCoords [2 * 4]int
+		var zCoords [2 * 4]int
 		for n := range moons {
 			xCoords[2*n] = moons[n].p.X
 			xCoords[2*n+1] = moons[n].v.X
