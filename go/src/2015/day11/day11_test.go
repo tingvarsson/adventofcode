@@ -12,11 +12,11 @@ func TestRun(t *testing.T) {
 		{"abcdefgh", "abcdffaa"},
 		{"ghijklmn", "ghjaabcc"},
 		{"cqjxjnds", "cqjxxyzz"},
-		{"cqjxxyzz", ""},
+		{"cqjxxyzz", "cqkaabcc"},
 	}
 	for _, test := range tests {
 		if output := run(test.input); output != test.expected {
-			t.Error("Test Failed: {} input, {} expected, recieved: {}", test.input, test.expected, output)
+			t.Errorf("Test Failed: %v input, %v expected, recieved: %v", test.input, test.expected, output)
 		}
 	}
 }
