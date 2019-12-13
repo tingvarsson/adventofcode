@@ -31,20 +31,6 @@ func turn(d direction, i int) direction {
 	}
 }
 
-type coord struct {
-	X int
-	Y int
-}
-
-func find(cs []coord, a coord) bool {
-	for _, c := range cs {
-		if c == a {
-			return true
-		}
-	}
-	return false
-}
-
 func run(filepath string, i int) (result int) {
 	input := utils.ReadFileToString(filepath)
 	inputData := strings.Split(input, ",")
@@ -53,9 +39,9 @@ func run(filepath string, i int) (result int) {
 		intcode = append(intcode, utils.Atoi(code))
 	}
 
-	var visited []coord
-	colors := make(map[coord]int)
-	current := coord{0, 0}
+	var visited []utils.Dim2
+	colors := make(map[utils.Dim2]int)
+	current := utils.Dim2{0, 0}
 	colors[current] = i
 	dir := up
 	p := program.New(intcode)
@@ -66,7 +52,7 @@ func run(filepath string, i int) (result int) {
 			break
 		}
 		colors[current] = p.Output[0]
-		if !find(visited, current) {
+		if !utils.FindDim2(visited, current) {
 			visited = append(visited, current)
 		}
 		dir = turn(dir, p.Output[1])
@@ -81,7 +67,7 @@ func run(filepath string, i int) (result int) {
 		} else if dir == left {
 			x--
 		}
-		current = coord{x, y}
+		current = utils.Dim2{x, y}
 	}
 
 	result = len(visited)
@@ -89,7 +75,7 @@ func run(filepath string, i int) (result int) {
 	if i == 1 {
 		hull := make([][]int, 6)
 		for i := range hull {
-			hull[i] = make([]int, 50)
+			hull[i] = make([]int, 43)
 		}
 
 		for _, c := range visited {

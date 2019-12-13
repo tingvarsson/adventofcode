@@ -43,6 +43,21 @@ func GCD(a, b int) int {
 	return a
 }
 
+// Dim2 is a two dimensional representation
+type Dim2 struct {
+	X, Y int
+}
+
+// FindDim2 checks if d exist in []Dim2 dl
+func FindDim2(dl []Dim2, d Dim2) bool {
+	for _, a := range dl {
+		if a == d {
+			return true
+		}
+	}
+	return false
+}
+
 // Dim3 is a three dimensional representation
 type Dim3 struct {
 	X, Y, Z int
