@@ -19,11 +19,23 @@ func New(memory []int) Program {
 	return Program{m, 0, 0, []int{}, []int{}, false}
 }
 
+// GetOutput pops and returns all output
+func (p *Program) GetOutput() []int {
+	o := p.Output
+	p.Output = []int{}
+	return o
+}
+
 // PopOutput pops and returns the oldest output
 func (p *Program) PopOutput() int {
 	o := p.Output[0]
 	p.Output = p.Output[1:]
 	return o
+}
+
+// RunWoArgs makes the program go around without any input
+func (p *Program) RunWoArgs() bool {
+	return p.Run([]int{})
 }
 
 // Run makes the program go around
