@@ -47,54 +47,55 @@ func (p *Program) Run(newInput []int) bool {
 		m1 := (p.memory[p.instr] / 100) % 10
 		m2 := (p.memory[p.instr] / 1000) % 10
 		m3 := (p.memory[p.instr] / 10000) % 10
-		if op == 1 {
+		switch op {
+		case 1:
 			p.set(p.instr+3, m3, p.get(p.instr+1, m1)+p.get(p.instr+2, m2))
 			p.instr += 4
-		} else if op == 2 {
+		case 2:
 			p.set(p.instr+3, m3, p.get(p.instr+1, m1)*p.get(p.instr+2, m2))
 			p.instr += 4
-		} else if op == 3 {
+		case 3:
 			if len(p.Input) == 0 {
 				break
 			}
 			p.set(p.instr+1, m1, p.Input[0])
 			p.Input = p.Input[1:] // dequeue
 			p.instr += 2
-		} else if op == 4 {
+		case 4:
 			p.Output = append(p.Output, p.get(p.instr+1, m1))
 			p.instr += 2
-		} else if op == 5 {
+		case 5:
 			if p.get(p.instr+1, m1) != 0 {
 				p.instr = p.get(p.instr+2, m2)
 			} else {
 				p.instr += 3
 			}
-		} else if op == 6 {
+		case 6:
 			if p.get(p.instr+1, m1) == 0 {
 				p.instr = p.get(p.instr+2, m2)
 			} else {
 				p.instr += 3
 			}
-		} else if op == 7 {
+		case 7:
 			if p.get(p.instr+1, m1) < p.get(p.instr+2, m2) {
 				p.set(p.instr+3, m3, 1)
 			} else {
 				p.set(p.instr+3, m3, 0)
 			}
 			p.instr += 4
-		} else if op == 8 {
+		case 8:
 			if p.get(p.instr+1, m1) == p.get(p.instr+2, m2) {
 				p.set(p.instr+3, m3, 1)
 			} else {
 				p.set(p.instr+3, m3, 0)
 			}
 			p.instr += 4
-		} else if op == 9 {
+		case 9:
 			p.relativeBase += p.get(p.instr+1, m1)
 			p.instr += 2
-		} else if op == 99 {
+		case 99:
 			p.Halted = true
-			break
+			return p.Halted
 		}
 	}
 	return p.Halted
@@ -102,11 +103,12 @@ func (p *Program) Run(newInput []int) bool {
 
 func (p Program) get(addr, mode int) int {
 	param := p.memory[addr]
-	if mode == 0 {
+	switch mode {
+	case 0:
 		return p.memory[param]
-	} else if mode == 1 {
+	case 1:
 		return param
-	} else if mode == 2 {
+	case 2:
 		return p.memory[p.relativeBase+param]
 	}
 	return 0
