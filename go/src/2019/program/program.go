@@ -56,7 +56,7 @@ func (p *Program) Run(newInput []int) bool {
 			p.instr += 4
 		case 3:
 			if len(p.Input) == 0 {
-				break
+				return p.Halted
 			}
 			p.set(p.instr+1, m1, p.Input[0])
 			p.Input = p.Input[1:] // dequeue
