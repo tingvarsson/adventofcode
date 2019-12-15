@@ -21,8 +21,8 @@
 |11|[data](2019/day11/)|[src](go/src/2019/day11/day11.go)|||
 |12|[data](2019/day12/)|[src](go/src/2019/day12/day12.go)|||
 |13|[data](2019/day13/)|[src](go/src/2019/day13/day13.go)|||
-|14|||||
-|15|||||
+|14|[data](2019/day14/)|[src](go/src/2019/day14/day14.go)|||
+|15|[data](2019/day15/)|[src](go/src/2019/day15/day15.go)|||
 |16|||||
 |17|||||
 |18|||||
