@@ -17,6 +17,21 @@ const (
 	left
 )
 
+func move(d direction, p utils.Dim2) (n utils.Dim2) {
+	n = utils.Dim2{p.X, p.Y}
+	switch d {
+	case up:
+		n.Y--
+	case right:
+		n.X++
+	case down:
+		n.Y++
+	case left:
+		n.X--
+	}
+	return
+}
+
 func turn(d direction, i int) direction {
 	if i == 0 {
 		if d == up {
@@ -31,13 +46,17 @@ func turn(d direction, i int) direction {
 	}
 }
 
-func run(filepath string, i int) (result int) {
-	input := utils.ReadFileToString(filepath)
+func parseIntcode(file string) (intcode []int) {
+	input := utils.ReadFileToString(file)
 	inputData := strings.Split(input, ",")
-	var intcode []int
 	for _, code := range inputData {
 		intcode = append(intcode, utils.Atoi(code))
 	}
+	return
+}
+
+func run(filepath string, i int) (result int) {
+	intcode := parseIntcode(filepath)
 
 	var visited []utils.Dim2
 	colors := make(map[utils.Dim2]int)
@@ -46,28 +65,17 @@ func run(filepath string, i int) (result int) {
 	dir := up
 	p := program.New(intcode)
 	for true {
-		p.Output = []int{}
 		p.Run([]int{colors[current]})
+		o := p.GetOutput()
 		if p.Halted {
 			break
 		}
-		colors[current] = p.Output[0]
+		colors[current] = o[0]
 		if !utils.FindDim2(visited, current) {
 			visited = append(visited, current)
 		}
-		dir = turn(dir, p.Output[1])
-		x := current.X
-		y := current.Y
-		if dir == up {
-			y--
-		} else if dir == right {
-			x++
-		} else if dir == down {
-			y++
-		} else if dir == left {
-			x--
-		}
-		current = utils.Dim2{x, y}
+		dir = turn(dir, o[1])
+		current = move(dir, current)
 	}
 
 	result = len(visited)
