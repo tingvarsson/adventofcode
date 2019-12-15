@@ -26,13 +26,14 @@ type wire struct {
 func traverse(w wire, direction string, distance int) wire {
 	dx := 0
 	dy := 0
-	if direction == "U" {
+	switch direction {
+	case "U":
 		dx = 1
-	} else if direction == "R" {
+	case "R":
 		dy = 1
-	} else if direction == "D" {
+	case "D":
 		dx = -1
-	} else if direction == "L" {
+	case "L":
 		dy = -1
 	}
 
