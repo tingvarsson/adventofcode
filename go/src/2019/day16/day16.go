@@ -45,10 +45,10 @@ func run(filepath string) string {
 }
 
 func phase2(input []int) {
-	output := 0
+	sum := 0
 	for i := len(input) - 1; i >= 0; i-- {
-		output += input[i]
-		input[i] = utils.Abs(output) % 10
+		sum += input[i]
+		input[i] = utils.Abs(sum) % 10
 	}
 	return
 }
@@ -57,14 +57,13 @@ func run2(filepath string) string {
 	data := utils.ReadFileToString(filepath)
 	input := utils.AtoiSlice(data)
 
-	endIdx := len(input) * 10000
-	startIdx := 0
+	offset := 0
 	for n := 0; n < 7; n++ {
-		startIdx += input[6-n] * utils.Pow(10, n)
+		offset += input[6-n] * utils.Pow(10, n)
 	}
 
-	normOffset := startIdx % (len(input))
-	longInput := make([]int, endIdx-startIdx)
+	normOffset := offset % (len(input))
+	longInput := make([]int, len(input)*10000-offset)
 	for n := 0; n < len(longInput); n++ {
 		longInput[n] = input[(normOffset+n)%len(input)]
 	}
