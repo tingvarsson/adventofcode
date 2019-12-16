@@ -75,6 +75,14 @@ func Insert(s *[]int, i int, v int) {
 	(*s)[i] = v
 }
 
+// IntsToString Convert []int input to string
+func IntsToString(input []int) (s string) {
+	for _, i := range input {
+		s += strconv.Itoa(i)
+	}
+	return
+}
+
 // LCM returns the least common multiple of a,b,...
 func LCM(a, b int, integers ...int) int {
 	result := a * b / GCD(a, b)
@@ -143,6 +151,16 @@ func Permutations(input []int) (output [][]int) {
 	}
 	helper(input, len(input))
 	return
+}
+
+// Pow returns a^n
+func Pow(a, n int) int {
+	var i, result int
+	result = 1
+	for i = 0; i < n; i++ {
+		result *= a
+	}
+	return result
 }
 
 // ReadFileToLines reads filepath and returns the content as a []string
