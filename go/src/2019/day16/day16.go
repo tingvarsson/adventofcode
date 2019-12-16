@@ -35,10 +35,7 @@ func phase(input []int) {
 
 func run(filepath string) string {
 	data := utils.ReadFileToString(filepath)
-	var input []int
-	for _, i := range data {
-		input = append(input, utils.Atoi(string(i)))
-	}
+	input := utils.AtoiSlice(data)
 
 	for n := 0; n < 100; n++ {
 		phase(input)
@@ -58,10 +55,7 @@ func phase2(input []int) {
 
 func run2(filepath string) string {
 	data := utils.ReadFileToString(filepath)
-	var input []int
-	for _, i := range data {
-		input = append(input, utils.Atoi(string(i)))
-	}
+	input := utils.AtoiSlice(data)
 
 	endIdx := len(input) * 10000
 	startIdx := 0
