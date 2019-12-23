@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -41,6 +42,36 @@ func GCD(a, b int) int {
 		a = t
 	}
 	return a
+}
+
+type direction int
+
+const (
+	up direction = iota
+	down
+	left
+	right
+)
+
+// AllDirections returns an array of all possible directions
+func AllDirections() []direction {
+	return []direction{up, down, left, right}
+}
+
+// Move takes a direction and a Dim2 position and returns its new position
+func Move(d direction, p Dim2) (n Dim2) {
+	n = Dim2{p.X, p.Y}
+	switch d {
+	case up:
+		n.X++
+	case down:
+		n.X--
+	case left:
+		n.Y--
+	case right:
+		n.Y++
+	}
+	return
 }
 
 // Dim2 is a two dimensional representation
@@ -185,6 +216,19 @@ func ReadFileToString(filepath string) string {
 		log.Fatal(err)
 	}
 	return string(b)
+}
+
+type byRune []rune
+
+func (r byRune) Len() int           { return len(r) }
+func (r byRune) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }
+func (r byRune) Less(i, j int) bool { return r[i] < r[j] }
+
+// SortStringByCharacter takes a string s and returns a sorted string
+func SortStringByCharacter(s string) string {
+	var r byRune = []rune(s)
+	sort.Sort(r)
+	return string(r)
 }
 
 // StringsToInts takes a []string s and converts it to a []int i with Atoi()
