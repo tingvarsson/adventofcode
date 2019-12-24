@@ -47,10 +47,10 @@ func searchNeighbors(area [][]rune, start utils.Dim2) (distance map[rune]int) {
 			}
 
 			discovered[newPos] = discovered[pos] + 1
-			queue = append(queue, newPos)
+		queue = append(queue, newPos)
 		}
 	}
-	return
+return
 }
 
 type node struct {
@@ -58,7 +58,8 @@ type node struct {
 	keys string
 }
 
-func searchPath(graph map[rune]map[rune]int, start node, endCount int) (shortest int) {
+func searchPath(graph map[rune]map[rune]int, availableKeys string) (shortest int) {
+	start := node{'@', ""}
 	distance := make(map[node]int)
 	distance[start] = 0
 	queue := []node{start}
@@ -71,12 +72,18 @@ func searchPath(graph map[rune]map[rune]int, start node, endCount int) (shortest
 		})
 		n := queue[0]
 		queue = queue[1:]
-		if len(n.keys) == endCount {
+		if len(n.keys) == len(availableKeys) {
+			if shortest == 0 || distance[n] < shortest {
+				shortest = distance[n]
+			}
 			continue
 		}
 		for neighbor, dist := range graph[n.obj] {
-			if unicode.IsUpper(neighbor) && !strings.ContainsRune(n.keys, unicode.ToLower(neighbor)) {
-				continue
+			if unicode.IsUpper(neighbor) {
+				neededKey := unicode.ToLower(neighbor)
+				if strings.ContainsRune(availableKeys, neededKey) && !strings.ContainsRune(n.keys, neededKey) {
+					continue
+				}
 			}
 
 			keys := n.keys
@@ -92,106 +99,80 @@ func searchPath(graph map[rune]map[rune]int, start node, endCount int) (shortest
 				}
 			} else {
 				distance[newNode] = distance[n] + dist
-				queue = append(queue, newNode)
+			queue = append(queue, newNode)
 			}
 		}
 	}
-	shortest = 1000000
-	for n, d := range distance {
-		if len(n.keys) == endCount && d < shortest {
-			shortest = d
-		}
-	}
-	return
+return
 }
 
 func run(filepath string) int {
 	data := utils.ReadFileToLines(filepath)
 	area, objs := parseArea(data)
 	neighbors := make(map[rune]map[rune]int)
-	numKeys := 0
+	var keys string
 	for pos, obj := range objs {
 		neighbors[obj] = searchNeighbors(area, pos)
 		if unicode.IsLower(obj) {
-			numKeys++
+			keys += string(obj)
 		}
 	}
-
-	start := node{'@', ""}
-	return searchPath(neighbors, start, numKeys)
+	return searchPath(neighbors, keys)
 }
 
-func searchPath2(graph map[rune]map[rune]int, start node, endCount int) (shortest int) {
-	distance := make(map[node]int)
-	distance[start] = 0
-	queue := []node{start}
-	for len(queue) > 0 {
-		sort.Slice(queue, func(i, j int) bool {
-			if len(queue[i].keys) != len(queue[j].keys) {
-				return len(queue[i].keys) > len(queue[j].keys)
-			}
-			return distance[queue[i]] < distance[queue[j]]
-		})
-		n := queue[0]
-		queue = queue[1:]
-		if len(n.keys) == endCount {
-			continue
-		}
-		for neighbor, dist := range graph[n.obj] {
-			if unicode.IsUpper(neighbor) && !strings.ContainsRune(n.keys, unicode.ToLower(neighbor)) {
-				continue
-			}
+type quadRange struct {
+	minX, minY, maxX, maxY int
+}
 
-			keys := n.keys
-			if unicode.IsLower(neighbor) && !strings.ContainsRune(n.keys, neighbor) {
-				keys = utils.SortStringByCharacter(keys)
-				keys += string(neighbor)
-			}
-			newNode := node{neighbor, keys}
-			if _, ok := distance[newNode]; ok {
-				if distance[n]+dist < distance[newNode] {
-					distance[newNode] = distance[n] + dist
-					queue = append(queue, newNode)
-				}
-			} else {
-				distance[newNode] = distance[n] + dist
-				queue = append(queue, newNode)
+func parseQuads(data []string) (quads [][][]rune, quadObjs []map[utils.Dim2]rune) {
+	area, objs := parseArea(data)
+	halfX := len(area[0])/2
+	fullX := len(area[0])
+	halfY := len(area)/2
+	fullY := len(area)
+	ranges := []quadRange{{0, 0, halfX+1, halfY+1},{0, halfY, halfX+1, fullY},{halfX, 0, fullX, halfY+1},{halfX, halfY, fullX, fullY}}
+	for _, r := range ranges {
+		quad := make([][]rune, halfY+1)
+		for y := r.minY; y < r.maxY; y++ {
+			quad[y-r.minY] = make([]rune, halfX+1)
+			for x := r.minX; x < r.maxX; x++ {
+				quad[y-r.minY][x-r.minX] = area[y][x]
 			}
 		}
-	}
-	shortest = 1000000
-	for n, d := range distance {
-		if len(n.keys) == endCount && d < shortest {
-			shortest = d
+		quads = append(quads, quad)
+		qObjs := make(map[utils.Dim2]rune) 
+		for p, o := range objs {
+			if p.X > r.minX && p.X < r.maxX && p.Y > r.minY && p.Y < r.maxY {
+				p.X -= r.minX
+				p.Y -= r.minY
+				qObjs[p] = o
+			}
 		}
+		quadObjs = append(quadObjs, qObjs)
 	}
 	return
 }
 
-func run2(filepath string) int {
+func run2(filepath string) (result int) {
 	data := utils.ReadFileToLines(filepath)
-	area, objs := parseArea(data)
-	neighbors := make(map[rune]map[rune]int)
-	numRobots := 0
-	numKeys := 0
-	for pos, obj := range objs {
-		if obj == '@' {
-			numRobots++
-			obj = rune(numRobots + int('0'))
-			objs[pos] = obj
-			area[pos.Y][pos.X] = obj
+	quads, quadObjs := parseQuads(data)
+	for i := range quads {
+		neighbors := make(map[rune]map[rune]int)
+		var keys string
+		for pos, obj := range quadObjs[i] {
+			neighbors[obj] = searchNeighbors(quads[i], pos)
+			if unicode.IsLower(obj) {
+				keys += string(obj)
+			}
 		}
-		neighbors[obj] = searchNeighbors(area, pos)
-		if unicode.IsLower(obj) {
-			numKeys++
-		}
+		result += searchPath(neighbors, keys)
 	}
-
-	start := node{'@', ""}
-	return searchPath2(neighbors, start, numKeys)
+	return
 }
 
 func main() {
 	res := run(os.Args[1])
+	fmt.Println(res)
+	res = run2(os.Args[1])
 	fmt.Println(res)
 }
