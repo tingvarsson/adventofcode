@@ -47,6 +47,6 @@ func TestRun2(t *testing.T) {
 }
 
 func TestMain(t *testing.T) {
-	os.Args[1] = os.Getenv("ROOT") + "/2019/day19/input"
+	os.Args[1] = os.Getenv("ROOT") + "/2019/day18/input"
 	main()
 }

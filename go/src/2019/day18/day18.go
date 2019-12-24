@@ -173,6 +173,4 @@ func run2(filepath string) (result int) {
 func main() {
 	res := run(os.Args[1])
 	fmt.Println(res)
-	res = run2(os.Args[1])
-	fmt.Println(res)
 }
